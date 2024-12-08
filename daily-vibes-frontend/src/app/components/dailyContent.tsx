@@ -54,7 +54,6 @@ export default function DailyContent({
         body: JSON.stringify({
           content: diary,
           contentDate: stringDate,
-          vibe: "happy",
         }),
       });
 

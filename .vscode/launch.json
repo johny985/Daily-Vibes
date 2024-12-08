@@ -4,10 +4,23 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Debug Nest Framework",
+      "name": "Debug Backend (Nest Framework)",
       "runtimeExecutable": "npm",
       "runtimeArgs": ["run", "start:debug"],
       "cwd": "${workspaceFolder}/daily-vibes-backend",
+      "autoAttachChildProcesses": true,
+      "restart": true,
+      "sourceMaps": true,
+      "stopOnEntry": false,
+      "console": "integratedTerminal"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Frontend (Next.js)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "${workspaceFolder}/daily-vibes-frontend", // Make sure this points to your frontend folder
       "autoAttachChildProcesses": true,
       "restart": true,
       "sourceMaps": true,

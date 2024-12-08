@@ -7,9 +7,5 @@ export class CreateDiaryDto {
 
   @IsString()
   @IsNotEmpty()
-  vibe: string;
-
-  @IsString()
-  @IsNotEmpty()
   contentDate?: string;
 }

@@ -21,7 +21,7 @@ import { ConfigModule } from '@nestjs/config';
       port: parseInt(process.env.DB_PORT),
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
+      database: process.env.DB_DATABASE,
       entities: [User, Diary],
       synchronize: true,
     }),
@@ -29,4 +29,4 @@ import { ConfigModule } from '@nestjs/config';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule {} //
