@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 import "./calandar.css";
 import DailyContent from "./components/dailyContent";
+import Modal from "./components/modal";
+import styles from "./components/dailyContent.module.css";
 
 const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
 
@@ -12,6 +14,8 @@ export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dailyData, setDailyData] = useState<any>([]);
+  const [hasEdited, setHasEdited] = useState(false);
+  const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
 
   const updateDailyData = (newMood: any) => {
     setDailyData((prevMoodData: any) => [
@@ -22,7 +26,6 @@ export default function Home() {
     ]);
   };
 
-  // Fetching diary content for the selected year and month
   const fetchDiaryContent = async (year: number, month: number) => {
     try {
       const response = await fetch(
@@ -56,8 +59,12 @@ export default function Home() {
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
-    setIsModalOpen(false);
+  const closeModal = (isSaving = false) => {
+    if (hasEdited && !isSaving) {
+      setShowCloseConfirmation(true);
+    } else {
+      setIsModalOpen(false);
+    }
   };
 
   const handleMonthChange = async ({ action, view, activeStartDate }: any) => {
@@ -117,7 +124,36 @@ export default function Home() {
           date={selectedDate as Date}
           onClose={closeModal}
           onSave={updateDailyData}
+          setHasEdited={setHasEdited}
         />
+      )}
+
+      {showCloseConfirmation && (
+        <Modal>
+          <div className={styles.confirmation}>
+            <p>Unsaved changes will be lost. Do you want to leave?</p>
+            <div className={styles.buttonGroup}>
+              <button
+                className={styles.confirmButton}
+                onClick={() => {
+                  setShowCloseConfirmation(false);
+                  setIsModalOpen(false);
+                  setHasEdited(false);
+                }}
+              >
+                Yes
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => {
+                  setShowCloseConfirmation(false);
+                }}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </Modal>
       )}
     </div>
   );

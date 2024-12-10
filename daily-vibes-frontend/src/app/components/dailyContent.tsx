@@ -6,10 +6,12 @@ export default function DailyContent({
   date,
   onClose,
   onSave,
+  setHasEdited,
 }: {
   date: Date;
-  onClose: () => void;
+  onClose: (isSaving?: boolean) => void;
   onSave: (newMood: any) => void;
+  setHasEdited?: (hasEdited: boolean) => void;
 }) {
   const stringDate = date.toLocaleDateString();
   const [editable, setEditable] = useState(true);
@@ -75,7 +77,7 @@ export default function DailyContent({
         };
 
         onSave(newMood);
-        onClose();
+        onClose(true);
       } else {
         throw new Error("Failed to save diary content");
       }
@@ -110,9 +112,9 @@ export default function DailyContent({
 
   return (
     <>
-      <Modal>
+      <Modal onClose={onClose}>
         <div className={styles.diary}>
-          <button className={styles.closeButton} onClick={onClose}>
+          <button className={styles.closeButton} onClick={() => onClose(false)}>
             ×
           </button>
           <h1 className={styles.title}>Daily Vibes</h1>
@@ -123,7 +125,10 @@ export default function DailyContent({
             className={`${styles.content} ${!editable ? styles.disabled : ""}`}
             placeholder="Write your thoughts or vibes for today..."
             value={diary}
-            onChange={(e) => setDiary(e.target.value)}
+            onChange={(e) => {
+              setDiary(e.target.value);
+              if (setHasEdited) setHasEdited(true);
+            }}
             disabled={!editable}
           />
           <div className={styles.buttonGroup}>
@@ -143,7 +148,7 @@ export default function DailyContent({
       </Modal>
 
       {isConfirmationModalOpen && (
-        <Modal>
+        <Modal onClose={onClose}>
           <div className={styles.confirmation}>
             <p>Are you sure to delete this diary content?</p>
             <div className={styles.buttonGroup}>

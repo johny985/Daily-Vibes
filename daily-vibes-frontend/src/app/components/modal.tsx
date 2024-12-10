@@ -5,9 +5,14 @@ import { createPortal } from "react-dom";
 import { useRouter } from "next/navigation";
 import style from "./modal.module.css";
 
-export default function Modal({ children }: { children: ReactNode }) {
+export default function Modal({
+  children,
+  onClose,
+}: {
+  children: ReactNode;
+  onClose?: () => void;
+}) {
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const router = useRouter();
 
   useEffect(() => {
     if (!dialogRef.current?.open) {
@@ -18,10 +23,9 @@ export default function Modal({ children }: { children: ReactNode }) {
 
   return createPortal(
     <dialog
-      onClose={() => router.back()}
       onClick={(e) => {
-        if ((e.target as any).nodeName === "DIALOG") {
-          //close the modal when clicking outside the dialog
+        if ((e.target as HTMLElement).nodeName === "DIALOG") {
+          if (onClose) onClose();
         }
       }}
       ref={dialogRef}
