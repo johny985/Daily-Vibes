@@ -14,7 +14,12 @@ export default function Home() {
   const [dailyData, setDailyData] = useState<any>([]);
 
   const updateDailyData = (newMood: any) => {
-    setDailyData((prevMoodData: any) => [...prevMoodData, newMood]);
+    setDailyData((prevMoodData: any) => [
+      ...prevMoodData.filter(
+        (data: any) => data.contentDate !== newMood.contentDate
+      ),
+      newMood,
+    ]);
   };
 
   // Fetching diary content for the selected year and month

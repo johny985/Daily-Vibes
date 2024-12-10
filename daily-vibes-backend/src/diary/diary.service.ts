@@ -17,7 +17,7 @@ export class DiaryService {
     private readonly openAIProvider: OpenAIProvider,
   ) {}
 
-  async create(createDiaryDto: CreateDiaryDto) {
+  async save(createDiaryDto: CreateDiaryDto) {
     // TODO: user id to current logged in id
     const userId = 1;
 
@@ -54,40 +54,50 @@ export class DiaryService {
     return await this.diaryRepository.save(newDiary);
   }
 
-  private async getVibe(content: string) {
+  private async getVibe(content: string): Promise<string> {
+    const allowedEmotions = ['Happy', 'Sad', 'Exhausted', 'Angry'];
     const openai = this.openAIProvider.getInstance();
-    const response = await openai.chat.completions.create({
-      messages: [
-        {
-          role: 'user',
-          content,
-        },
-        {
-          role: 'system',
-          content: `Select the most fitting emotion based on the content:
-	                  Happy, Sad, Exhausted, Angry
-                    **Make sure to only respond with the emotion.**
-            `,
-        },
-      ],
-      model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
-      max_tokens: 10,
-    });
 
-    return response.choices[0].message.content;
+    let emotion: string | undefined;
+
+    while (!allowedEmotions.includes(emotion)) {
+      const response = await openai.chat.completions.create({
+        messages: [
+          {
+            role: 'user',
+            content,
+          },
+          {
+            role: 'system',
+            content: `Select the most fitting emotion based on the content:
+	                  Happy, Sad, Exhausted, Angry
+                      **Make sure to only respond with the emotion.**
+            `,
+          },
+        ],
+        model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
+        max_tokens: 10,
+      });
+
+      emotion = response.choices[0]?.message.content.trim();
+    }
+
+    return emotion;
   }
 
   async findAll(year, month) {
     //TODO: user id to current logged in id
     const userId = 1;
 
-    return await this.diaryRepository.find({
+    const vibes = await this.diaryRepository.find({
       where: {
         user: { id: userId },
         contentDate: Like(`${month}/%/${year}`),
       },
       relations: ['user'],
     });
+
+    return vibes;
   }
 
   async findOne(date: string) {

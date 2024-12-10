@@ -21,7 +21,7 @@ export class DiaryController {
 
   @Post()
   create(@Body() createDiaryDto: CreateDiaryDto) {
-    return this.diaryService.create(createDiaryDto);
+    return this.diaryService.save(createDiaryDto);
   }
 
   @Get()

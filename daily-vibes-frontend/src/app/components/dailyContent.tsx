@@ -44,7 +44,7 @@ export default function DailyContent({
     fetchDiaryContent();
   }, [stringDate]);
 
-  const handleSave = async () => {
+  const handleDiaryUpdate = async () => {
     if (!editable) {
       setEdiable(true);
       return;
@@ -99,7 +99,7 @@ export default function DailyContent({
           onChange={(e) => setDiary(e.target.value)}
           disabled={!editable}
         />
-        <button className={styles.saveButton} onClick={handleSave}>
+        <button className={styles.saveButton} onClick={handleDiaryUpdate}>
           {editable ? "Save" : "Edit"}
         </button>
       </div>
