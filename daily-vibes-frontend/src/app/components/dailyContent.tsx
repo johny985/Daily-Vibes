@@ -1,6 +1,6 @@
 import Modal from "./modal";
 import styles from "./dailyContent.module.css";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 export default function DailyContent({
   date,
@@ -12,10 +12,11 @@ export default function DailyContent({
   onSave: (newMood: any) => void;
 }) {
   const stringDate = date.toLocaleDateString();
-  const [editable, setEdiable] = useState(true);
+  const [editable, setEditable] = useState(true);
   const [diary, setDiary] = useState("");
+  const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+  const [hasInitialContent, setHasInitialContent] = useState(false);
 
-  // Fetch diary content from the server based on the date when modal opens
   useEffect(() => {
     const fetchDiaryContent = async () => {
       try {
@@ -29,9 +30,11 @@ export default function DailyContent({
 
           if (data.content) {
             setDiary(data.content);
-            setEdiable(false);
+            setEditable(false);
+            setHasInitialContent(true);
           } else {
             setDiary("");
+            setHasInitialContent(false);
           }
         } else {
           console.error("Failed to fetch diary content");
@@ -46,7 +49,7 @@ export default function DailyContent({
 
   const handleDiaryUpdate = async () => {
     if (!editable) {
-      setEdiable(true);
+      setEditable(true);
       return;
     }
 
@@ -72,7 +75,6 @@ export default function DailyContent({
         };
 
         onSave(newMood);
-
         onClose();
       } else {
         throw new Error("Failed to save diary content");
@@ -82,27 +84,82 @@ export default function DailyContent({
     }
   };
 
+  const handleDeleteClick = () => {
+    setIsConfirmationModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/diary?date=${stringDate}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        onSave({ contentDate: stringDate, content: "", vibe: "" });
+        onClose();
+      } else {
+        throw new Error("Failed to delete diary content");
+      }
+    } catch (error) {
+      console.error("Error deleting diary content:", error);
+    }
+  };
+
   return (
-    <Modal>
-      <div className={styles.diary}>
-        <button className={styles.closeButton} onClick={onClose}>
-          ×
-        </button>
-        <h1 className={styles.title}>Daily Vibes</h1>
-        <p className={styles.date}>
-          {`Date: ${date?.toLocaleDateString() || "No date selected"}`}
-        </p>
-        <textarea
-          className={`${styles.content} ${!editable ? styles.disabled : ""}`}
-          placeholder="Write your thoughts or vibes for today..."
-          value={diary}
-          onChange={(e) => setDiary(e.target.value)}
-          disabled={!editable}
-        />
-        <button className={styles.saveButton} onClick={handleDiaryUpdate}>
-          {editable ? "Save" : "Edit"}
-        </button>
-      </div>
-    </Modal>
+    <>
+      <Modal>
+        <div className={styles.diary}>
+          <button className={styles.closeButton} onClick={onClose}>
+            ×
+          </button>
+          <h1 className={styles.title}>Daily Vibes</h1>
+          <p className={styles.date}>
+            {`Date: ${date?.toLocaleDateString() || "No date selected"}`}
+          </p>
+          <textarea
+            className={`${styles.content} ${!editable ? styles.disabled : ""}`}
+            placeholder="Write your thoughts or vibes for today..."
+            value={diary}
+            onChange={(e) => setDiary(e.target.value)}
+            disabled={!editable}
+          />
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveButton} onClick={handleDiaryUpdate}>
+              {editable ? "Save" : "Edit"}
+            </button>
+            {hasInitialContent && (
+              <button
+                className={styles.deleteButton}
+                onClick={handleDeleteClick}
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        </div>
+      </Modal>
+
+      {isConfirmationModalOpen && (
+        <Modal>
+          <div className={styles.confirmation}>
+            <p>Are you sure to delete this diary content?</p>
+            <div className={styles.buttonGroup}>
+              <button className={styles.confirmButton} onClick={confirmDelete}>
+                Yes
+              </button>
+              <button
+                className={styles.cancelButton}
+                onClick={() => setIsConfirmationModalOpen(false)}
+              >
+                No
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
+    </>
   );
 }

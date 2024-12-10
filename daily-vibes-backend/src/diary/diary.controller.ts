@@ -3,8 +3,6 @@ import {
   Get,
   Post,
   Body,
-  Patch,
-  Param,
   Delete,
   Query,
   UseInterceptors,
@@ -12,7 +10,6 @@ import {
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { CreateDiaryDto } from './dto/create-diary.dto';
-import { UpdateDiaryDto } from './dto/update-diary.dto';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -37,13 +34,8 @@ export class DiaryController {
     }
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateDiaryDto: UpdateDiaryDto) {
-    return this.diaryService.update(+id, updateDiaryDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.diaryService.remove(+id);
+  @Delete()
+  remove(@Query('date') date: string) {
+    return this.diaryService.remove(date);
   }
 }

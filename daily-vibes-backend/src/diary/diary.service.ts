@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDiaryDto } from './dto/create-diary.dto';
-import { UpdateDiaryDto } from './dto/update-diary.dto';
 import { Like, Repository } from 'typeorm';
 import { Diary } from './entities/diary.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -101,18 +100,23 @@ export class DiaryService {
   }
 
   async findOne(date: string) {
+    //TODO: user id to current logged in id
+    const userId = 1;
+
     const content = await this.diaryRepository.findOne({
-      where: { contentDate: date },
+      where: { contentDate: date, user: { id: userId } },
     });
 
     return content;
   }
 
-  update(id: number, updateDiaryDto: UpdateDiaryDto) {
-    return `This action updates a #${id} diary`;
-  }
+  remove(date: string) {
+    //TODO: user id to current logged in id
+    const userId = 1;
 
-  remove(id: number) {
-    return `This action removes a #${id} diary`;
+    return this.diaryRepository.delete({
+      contentDate: date,
+      user: { id: userId },
+    });
   }
 }
