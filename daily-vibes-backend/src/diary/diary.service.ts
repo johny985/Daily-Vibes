@@ -18,7 +18,7 @@ export class DiaryService {
   ) {}
 
   async create(createDiaryDto: CreateDiaryDto) {
-    //TODO: user id to current logged in id
+    // TODO: user id to current logged in id
     const userId = 1;
 
     const user = await this.userRepository.findOne({
@@ -29,13 +29,29 @@ export class DiaryService {
       throw new NotFoundException('User not found');
     }
 
+    const existingDiary = await this.diaryRepository.findOne({
+      where: {
+        user: { id: userId },
+        contentDate: createDiaryDto.contentDate,
+      },
+    });
+
     const vibe = await this.getVibe(createDiaryDto.content);
 
-    return await this.diaryRepository.save({
+    if (existingDiary) {
+      existingDiary.content = createDiaryDto.content;
+      existingDiary.vibe = vibe;
+
+      return await this.diaryRepository.save(existingDiary);
+    }
+
+    const newDiary = this.diaryRepository.create({
       ...createDiaryDto,
       vibe,
       user,
     });
+
+    return await this.diaryRepository.save(newDiary);
   }
 
   private async getVibe(content: string) {

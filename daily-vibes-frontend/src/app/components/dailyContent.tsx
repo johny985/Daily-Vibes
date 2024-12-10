@@ -12,7 +12,7 @@ export default function DailyContent({
   onSave: (newMood: any) => void;
 }) {
   const stringDate = date.toLocaleDateString();
-  const [hasContent, toggleSetContent] = useState(false);
+  const [editable, setEdiable] = useState(true);
   const [diary, setDiary] = useState("");
 
   // Fetch diary content from the server based on the date when modal opens
@@ -29,7 +29,7 @@ export default function DailyContent({
 
           if (data.content) {
             setDiary(data.content);
-            toggleSetContent(true);
+            setEdiable(false);
           } else {
             setDiary("");
           }
@@ -45,6 +45,11 @@ export default function DailyContent({
   }, [stringDate]);
 
   const handleSave = async () => {
+    if (!editable) {
+      setEdiable(true);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3001/diary", {
         method: "POST",
@@ -88,14 +93,14 @@ export default function DailyContent({
           {`Date: ${date?.toLocaleDateString() || "No date selected"}`}
         </p>
         <textarea
-          className={styles.content}
+          className={`${styles.content} ${!editable ? styles.disabled : ""}`}
           placeholder="Write your thoughts or vibes for today..."
           value={diary}
           onChange={(e) => setDiary(e.target.value)}
-          disabled={hasContent}
+          disabled={!editable}
         />
         <button className={styles.saveButton} onClick={handleSave}>
-          Save
+          {editable ? "Save" : "Edit"}
         </button>
       </div>
     </Modal>
