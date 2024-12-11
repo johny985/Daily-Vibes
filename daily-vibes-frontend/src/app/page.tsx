@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 import "./calandar.css";
@@ -73,14 +73,40 @@ export default function Home() {
       (action === "next" && view === "month") ||
       (action === "prev" && view === "month")
     ) {
-      console.log("Month changed");
-
       const year = activeStartDate.getFullYear();
       const month = activeStartDate.getMonth() + 1;
 
       await fetchDiaryContent(year, month);
     }
   };
+
+  const tileContent = useCallback(
+    ({ date }: { date: Date }) => {
+      if (dailyData?.length) {
+        for (let i = 0; i < dailyData.length; i++) {
+          const calendarDate = date.toLocaleDateString();
+          const contentDate = dailyData[i].contentDate;
+
+          if (calendarDate === contentDate) {
+            const vibe = dailyData[i].vibe;
+
+            if (!vibe) return;
+
+            let emoji = "";
+            if (vibe === "Happy") emoji = "😊";
+            else if (vibe === "Sad") emoji = "😢";
+            else if (vibe === "Exhausted") emoji = "😩";
+            else if (vibe === "Angry") emoji = "😡";
+
+            return (
+              <p style={{ fontSize: "3rem", marginTop: "0px" }}>{emoji}</p>
+            );
+          }
+        }
+      }
+    },
+    [dailyData]
+  );
 
   return (
     <div
@@ -96,28 +122,7 @@ export default function Home() {
         showNeighboringMonth={false}
         onClickDay={handleDayClick}
         onActiveStartDateChange={handleMonthChange}
-        tileContent={({ date }) => {
-          if (dailyData?.length) {
-            for (let i = 0; i < dailyData.length; i++) {
-              const calendarDate = date.toLocaleDateString();
-              const contentDate = dailyData[i].contentDate;
-
-              if (calendarDate === contentDate) {
-                const vibe = dailyData[i].vibe;
-
-                let emoji = "";
-                if (vibe === "Happy") emoji = "😊";
-                else if (vibe === "Sad") emoji = "😢";
-                else if (vibe === "Exhausted") emoji = "😩";
-                else if (vibe === "Angry") emoji = "😡";
-
-                return (
-                  <p style={{ fontSize: "3rem", marginTop: "0px" }}>{emoji}</p>
-                );
-              }
-            }
-          }
-        }}
+        tileContent={tileContent}
       />
       {isModalOpen && (
         <DailyContent
