@@ -1,6 +1,6 @@
 import Modal from "./modal";
 import styles from "./dailyContent.module.css";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 
 export default function DailyContent({
   date,
@@ -50,6 +50,11 @@ export default function DailyContent({
   }, [stringDate]);
 
   const handleDiaryUpdate = async () => {
+    if (!diary) {
+      onClose();
+      return;
+    }
+
     if (!editable) {
       setEditable(true);
       return;

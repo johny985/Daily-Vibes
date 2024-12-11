@@ -18,6 +18,8 @@ export default function Home() {
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
 
   const updateDailyData = (newMood: any) => {
+    setHasEdited(false);
+
     setDailyData((prevMoodData: any) => [
       ...prevMoodData.filter(
         (data: any) => data.contentDate !== newMood.contentDate
