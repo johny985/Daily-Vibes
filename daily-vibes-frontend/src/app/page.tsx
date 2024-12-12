@@ -7,8 +7,12 @@ import "./calandar.css";
 import DailyContent from "./components/dailyContent";
 import Modal from "./components/modal";
 import styles from "./components/dailyContent.module.css";
+import CalendarSkeleton from "./skeleton/calendarSkeleton";
 
-const Calendar = dynamic(() => import("react-calendar"), { ssr: false });
+const Calendar = dynamic(() => import("react-calendar"), {
+  ssr: false,
+  loading: () => <CalendarSkeleton />,
+});
 
 export default function Home() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -126,6 +130,7 @@ export default function Home() {
         onActiveStartDateChange={handleMonthChange}
         tileContent={tileContent}
       />
+
       {isModalOpen && (
         <DailyContent
           date={selectedDate as Date}
