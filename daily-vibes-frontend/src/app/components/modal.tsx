@@ -2,7 +2,6 @@
 
 import { ReactNode, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { useRouter } from "next/navigation";
 import style from "./modal.module.css";
 
 export default function Modal({
@@ -30,6 +29,11 @@ export default function Modal({
       }}
       ref={dialogRef}
       className={style.modal}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          if (onClose) onClose();
+        }
+      }}
     >
       {children}
     </dialog>,
