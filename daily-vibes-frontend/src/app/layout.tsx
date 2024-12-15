@@ -1,4 +1,5 @@
 import style from "./layout.module.css";
+import Header from "./components/header";
 
 export default function RootLayout({
   children,
@@ -11,7 +12,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <div className={style.container}>
-          <header style={{ color: "white" }}>Your Vibe Today</header>
+          <Header />
           <main>
             <div className={style.sidebar}>{sidebar}</div>
             <div className={style.content}>{children}</div>
