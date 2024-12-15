@@ -13,6 +13,7 @@ export default function Diary() {
     return formattedDate;
   });
   const [diary, setDiary] = useState("");
+  const [editable, setEditable] = useState(false);
 
   useEffect(() => {
     const fetchDiaryContent = async () => {
@@ -20,9 +21,9 @@ export default function Diary() {
       const formattedDate = `${month}/${day}/${year}`;
 
       try {
+        //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${formattedDate}`,
-          { cache: "force-cache" }
+          `http://localhost:3001/diary?date=${formattedDate}`
         );
 
         if (response.ok) {
@@ -30,8 +31,10 @@ export default function Diary() {
 
           if (data.content) {
             setDiary(data.content);
+            setEditable(false);
           } else {
             setDiary("");
+            setEditable(true);
           }
         } else {
           console.error("Failed to fetch diary content");
@@ -45,8 +48,11 @@ export default function Diary() {
   }, [date]);
 
   const handleDiaryUpdate = async () => {
-    //TODO: Fix date not like modal.
-    //TEMP
+    if (!editable) {
+      setEditable(true);
+      return;
+    }
+
     const [year, month, day] = date.split("-");
     const formattedDate = `${month}/${day}/${year}`;
 
@@ -61,9 +67,11 @@ export default function Diary() {
           contentDate: formattedDate,
         }),
       });
+
       if (response.ok) {
         const data = await response.json();
         console.log("Diary content saved:", data);
+        setEditable(false);
       } else {
         throw new Error("Failed to save diary content");
       }
@@ -88,17 +96,17 @@ export default function Diary() {
           </label>
         </p>
         <button className={styles.saveButton} onClick={handleDiaryUpdate}>
-          Save
+          {editable ? "Save" : "Edit"}
         </button>
       </div>
       <textarea
-        className={styles.content}
+        className={`${styles.content} ${!editable ? styles.disabled : ""}`}
         placeholder="Write your thoughts here..."
         onChange={(e) => {
           setDiary(e.target.value);
         }}
         value={diary}
-        disabled={false}
+        disabled={!editable}
       />
     </div>
   );

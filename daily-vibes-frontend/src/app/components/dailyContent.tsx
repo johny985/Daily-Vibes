@@ -22,9 +22,9 @@ export default function DailyContent({
   useEffect(() => {
     const fetchDiaryContent = async () => {
       try {
+        //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${stringDate}`,
-          { cache: "force-cache" }
+          `http://localhost:3001/diary?date=${stringDate}`
         );
 
         if (response.ok) {
