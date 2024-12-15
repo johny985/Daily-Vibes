@@ -9,8 +9,10 @@ export default function Header() {
   };
 
   return (
-    <header style={{ color: "white", cursor: "pointer" }} onClick={handleClick}>
-      Your Vibe Today
+    <header>
+      <span style={{ color: "white", cursor: "pointer" }} onClick={handleClick}>
+        Your Vibe Today
+      </span>
     </header>
   );
 }
