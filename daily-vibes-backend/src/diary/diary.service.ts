@@ -16,10 +16,7 @@ export class DiaryService {
     private readonly openAIProvider: OpenAIProvider,
   ) {}
 
-  async save(createDiaryDto: CreateDiaryDto) {
-    // TODO: user id to current logged in id
-    const userId = 1;
-
+  async save(createDiaryDto: CreateDiaryDto, userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
     });
@@ -84,10 +81,7 @@ export class DiaryService {
     return emotion;
   }
 
-  async findAll(year, month) {
-    //TODO: user id to current logged in id
-    const userId = 1;
-
+  async findAll(year, month, userId: number) {
     const vibes = await this.diaryRepository.find({
       where: {
         user: { id: userId },
@@ -99,10 +93,7 @@ export class DiaryService {
     return vibes;
   }
 
-  async findOne(date: string) {
-    //TODO: user id to current logged in id
-    const userId = 1;
-
+  async findOne(date: string, userId: number) {
     const content = await this.diaryRepository.findOne({
       where: { contentDate: date, user: { id: userId } },
     });
@@ -110,10 +101,7 @@ export class DiaryService {
     return content;
   }
 
-  remove(date: string) {
-    //TODO: user id to current logged in id
-    const userId = 1;
-
+  remove(date: string, userId: number) {
     return this.diaryRepository.delete({
       contentDate: date,
       user: { id: userId },
