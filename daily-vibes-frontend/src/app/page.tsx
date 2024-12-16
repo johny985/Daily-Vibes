@@ -23,7 +23,8 @@ export default function Diary() {
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${formattedDate}`
+          `http://localhost:3001/diary?date=${formattedDate}`,
+          { credentials: "include" }
         );
 
         if (response.ok) {
@@ -62,6 +63,7 @@ export default function Diary() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           content: diary,
           contentDate: formattedDate,

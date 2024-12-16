@@ -35,7 +35,10 @@ export default function Home() {
   const fetchDiaryContent = async (year: number, month: number) => {
     try {
       const response = await fetch(
-        `http://localhost:3001/diary?year=${year}&month=${month}`
+        `http://localhost:3001/diary?year=${year}&month=${month}`,
+        {
+          credentials: "include",
+        }
       );
 
       if (response.ok) {

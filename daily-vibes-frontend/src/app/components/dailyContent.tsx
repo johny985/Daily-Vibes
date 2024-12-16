@@ -24,7 +24,8 @@ export default function DailyContent({
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${stringDate}`
+          `http://localhost:3001/diary?date=${stringDate}`,
+          { credentials: "include" }
         );
 
         if (response.ok) {
@@ -63,6 +64,7 @@ export default function DailyContent({
     try {
       const response = await fetch("http://localhost:3001/diary", {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -101,6 +103,7 @@ export default function DailyContent({
         `http://localhost:3001/diary?date=${stringDate}`,
         {
           method: "DELETE",
+          credentials: "include",
         }
       );
 

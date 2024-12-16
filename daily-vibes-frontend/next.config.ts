@@ -16,6 +16,25 @@ const nextConfig: NextConfigWithLogging = {
       hmrRefreshes: true,
     },
   },
+  async redirects() {
+    return [
+      {
+        source: "/signUp",
+        destination: "/sign-up",
+        permanent: true,
+      },
+      {
+        source: "/signup",
+        destination: "/sign-up",
+        permanent: true,
+      },
+      {
+        source: "/SignUp",
+        destination: "/sign-up",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
