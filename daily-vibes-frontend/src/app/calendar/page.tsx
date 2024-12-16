@@ -129,6 +129,7 @@ export default function Home() {
         onClickDay={handleDayClick}
         onActiveStartDateChange={handleMonthChange}
         tileContent={tileContent}
+        locale="en-US"
       />
 
       {isModalOpen && (
