@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { CreateDiaryDto } from './dto/create-diary.dto';
+import { TransactionInterceptor } from 'src/common/interceptors/transaction.interceptor';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -17,6 +18,7 @@ export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   @Post()
+  @UseInterceptors(TransactionInterceptor)
   create(@Body() createDiaryDto: CreateDiaryDto) {
     return this.diaryService.save(createDiaryDto);
   }
