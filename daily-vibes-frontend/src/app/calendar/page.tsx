@@ -33,7 +33,7 @@ export default function Home() {
   };
 
   const fetchDiaryContent = async (year: number, month: number) => {
-    if (!document.cookie.includes("access_token=")) {
+    if (document.cookie.includes("tempUser")) {
       if (!localStorage.diaryEntries) return;
 
       const diaries = JSON.parse(localStorage.diaryEntries);

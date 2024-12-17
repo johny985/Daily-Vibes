@@ -17,11 +17,11 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
+@UseGuards(JwtAuthGuard)
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   create(@Body() createDiaryDto: CreateDiaryDto, @Request() req) {
     const userId = req?.user?.userId;
@@ -30,7 +30,6 @@ export class DiaryController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
   async find(
     @Request() req,
     @Query('date') date?: string,
@@ -47,7 +46,6 @@ export class DiaryController {
   }
 
   @Delete()
-  @UseGuards(JwtAuthGuard)
   remove(@Query('date') date: string, @Request() req) {
     const userId = req.user.userId;
 

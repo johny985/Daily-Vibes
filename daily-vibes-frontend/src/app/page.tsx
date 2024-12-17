@@ -4,10 +4,8 @@ import { useEffect, useState } from "react";
 
 import styles from "./page.module.css";
 import { fetchDiaryOnDate, saveDiaryEntry } from "./common/common.helper";
-import { useRouter } from "next/navigation";
 
 export default function Diary() {
-  const router = useRouter();
   const [date, setDate] = useState(() => {
     const todayString = new Date().toLocaleDateString();
 
@@ -19,18 +17,12 @@ export default function Diary() {
   const [diary, setDiary] = useState("");
   const [editable, setEditable] = useState(false);
 
-  // useEffect(() => {
-  //   if (!localStorage.getItem("isAuthenticated") && !document.cookie) {
-  //     router.push("/login");
-  //   }
-  // }, []);
-
   useEffect(() => {
     const fetchDiaryContent = async () => {
       const [year, month, day] = date.split("-");
       const formattedDate = `${month}/${day}/${year}`;
 
-      if (!document.cookie.includes("access_token=")) {
+      if (document.cookie.includes("tempUser")) {
         const diary = fetchDiaryOnDate(formattedDate);
 
         if (diary) {
@@ -81,7 +73,7 @@ export default function Diary() {
       return;
     }
 
-    if (!document.cookie.includes("access_token=")) {
+    if (document.cookie.includes("tempUser")) {
       saveDiaryEntry({
         content: diary,
         contentDate: formattedDate,

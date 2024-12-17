@@ -27,7 +27,7 @@ export default function DailyContent({
 
   useEffect(() => {
     const fetchDiaryContent = async () => {
-      if (!document.cookie.includes("access_token=")) {
+      if (document.cookie.includes("tempUser")) {
         const diaryEntry = fetchDiaryOnDate(stringDate);
 
         if (diaryEntry) {
@@ -81,7 +81,7 @@ export default function DailyContent({
       return;
     }
 
-    if (!document.cookie.includes("access_token=")) {
+    if (document.cookie.includes("tempUser")) {
       const newMood = {
         content: diary,
         contentDate: stringDate,
@@ -134,7 +134,7 @@ export default function DailyContent({
   };
 
   const confirmDelete = async () => {
-    if (!document.cookie.includes("access_token=")) {
+    if (document.cookie.includes("tempUser")) {
       deleteDiaryEntry(stringDate);
       onSave({ contentDate: stringDate, content: "", vibe: "" });
       onClose();

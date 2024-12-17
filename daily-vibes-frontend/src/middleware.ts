@@ -14,5 +14,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/calendar"], // Apply middleware only to these routes
+  matcher: ["/", "/calendar"],
 };
