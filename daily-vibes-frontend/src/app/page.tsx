@@ -25,7 +25,7 @@ export default function Diary() {
       if (document.cookie.includes("tempUser")) {
         const diary = fetchDiaryOnDate(formattedDate);
 
-        if (diary) {
+        if (diary.content) {
           setDiary(diary.content);
           setEditable(false);
         } else {

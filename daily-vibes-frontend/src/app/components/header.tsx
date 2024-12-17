@@ -12,6 +12,14 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
+    if (document.cookie.includes("tempUser")) {
+      document.cookie =
+        "tempUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      setLoggedIn(false);
+      router.push("/");
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3001/auth/logout", {
         method: "POST",
@@ -35,21 +43,22 @@ export default function Header() {
         Your Vibe Today
       </span>
       <div className={styles.buttonContainer}>
-        {!loggedIn ? (
-          <button
-            onClick={() => router.push("/login")}
-            className={`${styles.button} ${styles.loginButton}`}
-          >
-            Login
-          </button>
-        ) : (
-          <button
-            onClick={handleLogout}
-            className={`${styles.button} ${styles.logoutButton}`}
-          >
-            Logout
-          </button>
-        )}
+        {loggedIn !== null &&
+          (!loggedIn ? (
+            <button
+              onClick={() => router.push("/login")}
+              className={`${styles.button} ${styles.loginButton}`}
+            >
+              Login
+            </button>
+          ) : (
+            <button
+              onClick={handleLogout}
+              className={`${styles.button} ${styles.logoutButton}`}
+            >
+              Logout
+            </button>
+          ))}
       </div>
     </header>
   );
