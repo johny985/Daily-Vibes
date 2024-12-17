@@ -1,4 +1,4 @@
-export function fetchDiaryOnDate(date: string) {
+export function fetchLocalDiaryOnDate(date: string) {
   const storedEntries = localStorage.getItem("diaryEntries");
   const existingEntries = storedEntries ? JSON.parse(storedEntries) : [];
 
@@ -8,7 +8,23 @@ export function fetchDiaryOnDate(date: string) {
   return existingEntries[existingIndex];
 }
 
-export function saveDiaryEntry(entry: any) {
+export async function saveLocalDiaryEntry(entry: any) {
+  const response = await fetch("http://localhost:3001/diary/vibe", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ content: entry.content }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch vibe");
+  }
+
+  const { vibe } = await response.json();
+  entry.vibe = vibe;
+  console.log(vibe);
+
   const storageKey = "diaryEntries";
   const storedEntries = localStorage.getItem(storageKey);
   const existingEntries = storedEntries ? JSON.parse(storedEntries) : [];
@@ -24,9 +40,11 @@ export function saveDiaryEntry(entry: any) {
   }
 
   localStorage.setItem(storageKey, JSON.stringify(existingEntries));
+
+  return vibe;
 }
 
-export function deleteDiaryEntry(date: string) {
+export function deleteLocalDiaryEntry(date: string) {
   const storageKey = "diaryEntries";
   const storedEntries = localStorage.getItem(storageKey);
   const existingEntries = storedEntries ? JSON.parse(storedEntries) : [];

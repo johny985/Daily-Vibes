@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 
 import styles from "./page.module.css";
-import { fetchDiaryOnDate, saveDiaryEntry } from "./common/common.helper";
+import {
+  fetchLocalDiaryOnDate,
+  saveLocalDiaryEntry,
+} from "./common/common.helper";
 
 export default function Diary() {
   const [date, setDate] = useState(() => {
@@ -23,9 +26,9 @@ export default function Diary() {
       const formattedDate = `${month}/${day}/${year}`;
 
       if (document.cookie.includes("tempUser")) {
-        const diary = fetchDiaryOnDate(formattedDate);
+        const diary = fetchLocalDiaryOnDate(formattedDate);
 
-        if (diary.content) {
+        if (diary?.content) {
           setDiary(diary.content);
           setEditable(false);
         } else {
@@ -74,10 +77,9 @@ export default function Diary() {
     }
 
     if (document.cookie.includes("tempUser")) {
-      saveDiaryEntry({
+      await saveLocalDiaryEntry({
         content: diary,
         contentDate: formattedDate,
-        vibe: "Happy",
       });
 
       setEditable(false);

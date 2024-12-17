@@ -50,13 +50,13 @@ export class DiaryService {
     return await this.diaryRepository.save(newDiary);
   }
 
-  private async getVibe(content: string): Promise<string> {
+  async getVibe(content: string): Promise<string> {
     const allowedEmotions = ['Happy', 'Sad', 'Exhausted', 'Angry'];
     const openai = this.openAIProvider.getInstance();
 
-    let emotion: string | undefined;
+    let vibe: string | undefined;
 
-    while (!allowedEmotions.includes(emotion)) {
+    while (!allowedEmotions.includes(vibe)) {
       const response = await openai.chat.completions.create({
         messages: [
           {
@@ -75,10 +75,10 @@ export class DiaryService {
         max_tokens: 10,
       });
 
-      emotion = response.choices[0]?.message.content.trim();
+      vibe = response.choices[0]?.message.content.trim();
     }
 
-    return emotion;
+    return vibe;
   }
 
   async findAll(year, month, userId: number | undefined) {

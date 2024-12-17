@@ -3,9 +3,9 @@ import styles from "./dailyContent.module.css";
 
 import { useState, useEffect } from "react";
 import {
-  deleteDiaryEntry,
-  fetchDiaryOnDate,
-  saveDiaryEntry,
+  deleteLocalDiaryEntry,
+  fetchLocalDiaryOnDate,
+  saveLocalDiaryEntry,
 } from "../common/common.helper";
 
 export default function DailyContent({
@@ -28,7 +28,7 @@ export default function DailyContent({
   useEffect(() => {
     const fetchDiaryContent = async () => {
       if (document.cookie.includes("tempUser")) {
-        const diaryEntry = fetchDiaryOnDate(stringDate);
+        const diaryEntry = fetchLocalDiaryOnDate(stringDate);
 
         if (diaryEntry) {
           setDiary(diaryEntry.content);
@@ -85,14 +85,13 @@ export default function DailyContent({
       const newMood = {
         content: diary,
         contentDate: stringDate,
-        vibe: "Happy",
       };
 
-      saveDiaryEntry({
+      const vibe = await saveLocalDiaryEntry({
         ...newMood,
       });
 
-      onSave(newMood);
+      onSave({ ...newMood, vibe });
       onClose(true);
       return;
     }
@@ -135,7 +134,7 @@ export default function DailyContent({
 
   const confirmDelete = async () => {
     if (document.cookie.includes("tempUser")) {
-      deleteDiaryEntry(stringDate);
+      deleteLocalDiaryEntry(stringDate);
       onSave({ contentDate: stringDate, content: "", vibe: "" });
       onClose();
       return;

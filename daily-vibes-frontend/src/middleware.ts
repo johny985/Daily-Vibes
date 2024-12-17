@@ -10,9 +10,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
+  if ((token || tempUser) && request.nextUrl.pathname === "/login") {
+    const homeUrl = new URL("/", request.url);
+    return NextResponse.redirect(homeUrl);
+  }
+
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/", "/calendar"],
+  matcher: ["/", "/calendar", "/login"],
 };

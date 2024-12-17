@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 
@@ -50,5 +50,11 @@ export class DiaryController {
     const userId = req.user.userId;
 
     return this.diaryService.remove(date, userId);
+  }
+
+  @Post('vibe')
+  async getVibe(@Body() body) {
+    const vibe = await this.diaryService.getVibe(body.content);
+    return { vibe };
   }
 }
