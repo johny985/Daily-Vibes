@@ -1,6 +1,12 @@
 import Modal from "./modal";
 import styles from "./dailyContent.module.css";
+
 import { useState, useEffect } from "react";
+import {
+  deleteDiaryEntry,
+  fetchDiaryOnDate,
+  saveDiaryEntry,
+} from "../common/common.helper";
 
 export default function DailyContent({
   date,
@@ -21,6 +27,20 @@ export default function DailyContent({
 
   useEffect(() => {
     const fetchDiaryContent = async () => {
+      if (!document.cookie.includes("access_token=")) {
+        const diaryEntry = fetchDiaryOnDate(stringDate);
+
+        if (diaryEntry) {
+          setDiary(diaryEntry.content);
+          setEditable(false);
+          setHasInitialContent(true);
+        } else {
+          setDiary("");
+          setHasInitialContent(false);
+        }
+        return;
+      }
+
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
@@ -61,6 +81,22 @@ export default function DailyContent({
       return;
     }
 
+    if (!document.cookie.includes("access_token=")) {
+      const newMood = {
+        content: diary,
+        contentDate: stringDate,
+        vibe: "Happy",
+      };
+
+      saveDiaryEntry({
+        ...newMood,
+      });
+
+      onSave(newMood);
+      onClose(true);
+      return;
+    }
+
     try {
       const response = await fetch("http://localhost:3001/diary", {
         method: "POST",
@@ -98,6 +134,13 @@ export default function DailyContent({
   };
 
   const confirmDelete = async () => {
+    if (!document.cookie.includes("access_token=")) {
+      deleteDiaryEntry(stringDate);
+      onSave({ contentDate: stringDate, content: "", vibe: "" });
+      onClose();
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3001/diary?date=${stringDate}`,

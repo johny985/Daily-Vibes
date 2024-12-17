@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import styles from "./login.module.css";
 import Link from "next/link";
@@ -12,10 +13,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState("test");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = async (event: any) => {
-    event.preventDefault();
+  const handleAuth = async (endpoint: "login" | "setTempUser") => {
     try {
-      const response = await fetch("http://localhost:3001/auth/login", {
+      const response = await fetch(`http://localhost:3001/auth/${endpoint}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -37,42 +37,47 @@ export default function LoginPage() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>Login</h1>
-        <form className={styles.form} onSubmit={handleSubmit}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="email" className={styles.label}>
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className={styles.input}
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className={styles.input}
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          {errorMessage && <p className={styles.error}>{errorMessage}</p>}
-          <button type="submit" className={styles.button}>
-            Login
-          </button>
-        </form>
+        <div className={styles.inputGroup}>
+          <label htmlFor="email" className={styles.label}>
+            Email
+          </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            className={styles.input}
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="password" className={styles.label}>
+            Password
+          </label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            className={styles.input}
+            placeholder="Enter your password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+        </div>
+        {errorMessage && <p className={styles.error}>{errorMessage}</p>}
+        <button onClick={() => handleAuth("login")} className={styles.button}>
+          Login
+        </button>
+        &nbsp;
+        <button
+          onClick={() => handleAuth("setTempUser")}
+          className={styles.button}
+        >
+          Temp User
+        </button>
         <p className={styles.footer}>
           Don’t have an account?{" "}
           <Link href="/register" className={styles.link}>

@@ -1,9 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+
 import styles from "./page.module.css";
+import { fetchDiaryOnDate, saveDiaryEntry } from "./common/common.helper";
+import { useRouter } from "next/navigation";
 
 export default function Diary() {
+  const router = useRouter();
   const [date, setDate] = useState(() => {
     const todayString = new Date().toLocaleDateString();
 
@@ -15,10 +19,30 @@ export default function Diary() {
   const [diary, setDiary] = useState("");
   const [editable, setEditable] = useState(false);
 
+  // useEffect(() => {
+  //   if (!localStorage.getItem("isAuthenticated") && !document.cookie) {
+  //     router.push("/login");
+  //   }
+  // }, []);
+
   useEffect(() => {
     const fetchDiaryContent = async () => {
       const [year, month, day] = date.split("-");
       const formattedDate = `${month}/${day}/${year}`;
+
+      if (!document.cookie.includes("access_token=")) {
+        const diary = fetchDiaryOnDate(formattedDate);
+
+        if (diary) {
+          setDiary(diary.content);
+          setEditable(false);
+        } else {
+          setDiary("");
+          setEditable(true);
+        }
+
+        return;
+      }
 
       try {
         //TODO: Apply appropriate cache
@@ -49,13 +73,24 @@ export default function Diary() {
   }, [date]);
 
   const handleDiaryUpdate = async () => {
+    const [year, month, day] = date.split("-");
+    const formattedDate = `${month}/${day}/${year}`;
+
     if (!editable) {
       setEditable(true);
       return;
     }
 
-    const [year, month, day] = date.split("-");
-    const formattedDate = `${month}/${day}/${year}`;
+    if (!document.cookie.includes("access_token=")) {
+      saveDiaryEntry({
+        content: diary,
+        contentDate: formattedDate,
+        vibe: "Happy",
+      });
+
+      setEditable(false);
+      return;
+    }
 
     try {
       const response = await fetch("http://localhost:3001/diary", {

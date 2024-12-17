@@ -33,6 +33,15 @@ export default function Home() {
   };
 
   const fetchDiaryContent = async (year: number, month: number) => {
+    if (!document.cookie.includes("access_token=")) {
+      if (!localStorage.diaryEntries) return;
+
+      const diaries = JSON.parse(localStorage.diaryEntries);
+
+      setDailyData(diaries);
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:3001/diary?year=${year}&month=${month}`,

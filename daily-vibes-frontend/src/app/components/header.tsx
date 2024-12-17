@@ -1,5 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Header() {
   const router = useRouter();
@@ -10,14 +11,13 @@ export default function Header() {
 
   const handleLogout = async () => {
     try {
-      // Call the logout endpoint
       const response = await fetch("http://localhost:3001/auth/logout", {
         method: "POST",
-        credentials: "include", // Important to send cookies with the request
+        credentials: "include",
       });
 
       if (response.ok) {
-        router.push("/"); // Redirect to home page
+        router.push("/");
       } else {
         console.error("Logout failed");
       }
@@ -31,6 +31,18 @@ export default function Header() {
       <span style={{ color: "white", cursor: "pointer" }} onClick={handleClick}>
         Your Vibe Today
       </span>
+      <button
+        onClick={() => router.push("/login")}
+        style={{
+          backgroundColor: "green",
+          color: "white",
+          border: "none",
+          padding: "0.5rem 1rem",
+          cursor: "pointer",
+        }}
+      >
+        Login
+      </button>
       <button
         onClick={handleLogout}
         style={{

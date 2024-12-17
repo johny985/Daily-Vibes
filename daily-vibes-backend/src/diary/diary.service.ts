@@ -81,7 +81,7 @@ export class DiaryService {
     return emotion;
   }
 
-  async findAll(year, month, userId: number) {
+  async findAll(year, month, userId: number | undefined) {
     const vibes = await this.diaryRepository.find({
       where: {
         user: { id: userId },
@@ -93,12 +93,12 @@ export class DiaryService {
     return vibes;
   }
 
-  async findOne(date: string, userId: number) {
+  async findOne(date: string, userId: number | undefined) {
     const content = await this.diaryRepository.findOne({
       where: { contentDate: date, user: { id: userId } },
     });
 
-    return content;
+    return content || [];
   }
 
   remove(date: string, userId: number) {

@@ -24,8 +24,9 @@ export class DiaryController {
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(TransactionInterceptor)
   create(@Body() createDiaryDto: CreateDiaryDto, @Request() req) {
-    const user = req.user.userId;
-    return this.diaryService.save(createDiaryDto, user.id);
+    const userId = req?.user?.userId;
+
+    return this.diaryService.save(createDiaryDto, userId);
   }
 
   @Get()
@@ -36,10 +37,10 @@ export class DiaryController {
     @Query('year') year?: string,
     @Query('month') month?: string,
   ) {
-    const userId = req.user.userId;
+    const userId = req?.user?.userId;
 
     if (date) {
-      return (await this.diaryService.findOne(date, userId)) || {};
+      return await this.diaryService.findOne(date, userId);
     } else {
       return this.diaryService.findAll(year, month, userId);
     }

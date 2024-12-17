@@ -20,9 +20,9 @@ export class AuthController {
     const { access_token } = await this.authService.login(req.user);
     console.log('Access Token:', access_token);
 
-    //TODO: Set secure to true in production
+    //TODO: Set secure to true in production, httpOnly to true in production
     res.cookie('access_token', access_token, {
-      httpOnly: true,
+      httpOnly: false,
       secure: false,
       path: '/',
       // sameSite: 'lax',
@@ -42,5 +42,20 @@ export class AuthController {
     });
 
     return res.status(200).json({ message: 'Logged out successfully' });
+  }
+
+  @Post('setTempUser')
+  async setTempUser(@Request() req, @Response() res) {
+    const tempUser = true;
+
+    res.cookie('tempUser', tempUser, {
+      httpOnly: false,
+      secure: false,
+      path: '/',
+      // maxAge: 1000 * 4,
+      // sameSite: 'lax',
+    });
+
+    return res.status(200).json({ message: 'Login successful' });
   }
 }
