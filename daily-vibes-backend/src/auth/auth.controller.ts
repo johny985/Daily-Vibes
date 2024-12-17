@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Request,
-  Post,
-  UseGuards,
-  Get,
-  Response,
-} from '@nestjs/common';
+import { Controller, Request, Post, UseGuards, Response } from '@nestjs/common';
 
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -44,6 +37,7 @@ export class AuthController {
     return res.status(200).json({ message: 'Logged out successfully' });
   }
 
+  //TODO: Fix the name, cookie expiracy time
   @Post('setTempUser')
   async setTempUser(@Request() req, @Response() res) {
     const tempUser = true;

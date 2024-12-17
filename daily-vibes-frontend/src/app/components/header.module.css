@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #333;
+  padding: 1rem 2rem;
+  color: white;
+}
+
+.title {
+  cursor: pointer;
+}
+
+.buttonContainer {
+  display: flex;
+  gap: 1rem; /* Spacing between buttons */
+}
+
+.button {
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.loginButton {
+  background-color: green;
+}
+
+.loginButton:hover {
+  background-color: darkgreen;
+}
+
+.logoutButton {
+  background-color: red;
+}
+
+.logoutButton:hover {
+  background-color: darkred;
+}

@@ -5,9 +5,11 @@ import styles from "./login.module.css";
 import Link from "next/link";
 import Error from "next/error";
 import { useRouter } from "next/navigation";
+import { useUser } from "../contexts/userContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { setLoggedIn } = useUser();
 
   const [email, setEmail] = useState("test@test.com");
   const [password, setPassword] = useState("test");
@@ -28,6 +30,7 @@ export default function LoginPage() {
       }
 
       router.push("/");
+      setLoggedIn(true);
     } catch (error: any) {
       setErrorMessage(error.message);
     }

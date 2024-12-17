@@ -1,9 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useUser } from "../contexts/userContext";
+import styles from "./header.module.css";
 
 export default function Header() {
   const router = useRouter();
+  const { loggedIn, setLoggedIn } = useUser();
 
   const handleClick = () => {
     router.push("/");
@@ -17,6 +19,7 @@ export default function Header() {
       });
 
       if (response.ok) {
+        setLoggedIn(false);
         router.push("/");
       } else {
         console.error("Logout failed");
@@ -27,34 +30,27 @@ export default function Header() {
   };
 
   return (
-    <header>
-      <span style={{ color: "white", cursor: "pointer" }} onClick={handleClick}>
+    <header className={styles.header}>
+      <span className={styles.title} onClick={handleClick}>
         Your Vibe Today
       </span>
-      <button
-        onClick={() => router.push("/login")}
-        style={{
-          backgroundColor: "green",
-          color: "white",
-          border: "none",
-          padding: "0.5rem 1rem",
-          cursor: "pointer",
-        }}
-      >
-        Login
-      </button>
-      <button
-        onClick={handleLogout}
-        style={{
-          backgroundColor: "red",
-          color: "white",
-          border: "none",
-          padding: "0.5rem 1rem",
-          cursor: "pointer",
-        }}
-      >
-        Logout
-      </button>
+      <div className={styles.buttonContainer}>
+        {!loggedIn ? (
+          <button
+            onClick={() => router.push("/login")}
+            className={`${styles.button} ${styles.loginButton}`}
+          >
+            Login
+          </button>
+        ) : (
+          <button
+            onClick={handleLogout}
+            className={`${styles.button} ${styles.logoutButton}`}
+          >
+            Logout
+          </button>
+        )}
+      </div>
     </header>
   );
 }
