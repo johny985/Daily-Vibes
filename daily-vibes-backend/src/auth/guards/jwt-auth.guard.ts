@@ -5,7 +5,15 @@ import { AuthGuard } from '@nestjs/passport';
 export class JwtAuthGuard extends AuthGuard('jwt') {
   handleRequest(err, user, info, context: ExecutionContext) {
     if (err || !user) {
-      return null;
+      const request = context.switchToHttp().getRequest();
+      const cookies = request.cookies;
+      const tempUser = cookies['tempUser'];
+
+      if (tempUser) {
+        return null;
+      }
+
+      throw new Error('Unauthorized access');
     }
 
     return user;

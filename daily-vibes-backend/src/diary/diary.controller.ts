@@ -17,7 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 export class DiaryController {
   constructor(private readonly diaryService: DiaryService) {}
 

@@ -16,6 +16,10 @@ export class DiaryService {
     private readonly openAIProvider: OpenAIProvider,
   ) {}
 
+  private requestTimestamps: Map<string, number[]> = new Map();
+  private readonly limit = 30;
+  private readonly ttl = 60 * 1000;
+
   async save(createDiaryDto: CreateDiaryDto, userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -32,7 +36,7 @@ export class DiaryService {
       },
     });
 
-    const vibe = await this.getVibe(createDiaryDto.content);
+    const vibe = await this.getVibe(createDiaryDto.content, userId);
 
     if (existingDiary) {
       existingDiary.content = createDiaryDto.content;
@@ -50,7 +54,28 @@ export class DiaryService {
     return await this.diaryRepository.save(newDiary);
   }
 
-  async getVibe(content: string): Promise<string> {
+  private throttleRequest(userId: string): void {
+    const now = Date.now();
+    const timestamps = this.requestTimestamps.get(userId) || [];
+
+    const filteredTimestamps = timestamps.filter(
+      (timestamp) => now - timestamp < this.ttl,
+    );
+
+    if (filteredTimestamps.length >= this.limit) {
+      throw new Error('Too Many Requests');
+    }
+
+    filteredTimestamps.push(now);
+    this.requestTimestamps.set(userId, filteredTimestamps);
+  }
+
+  async getVibe(
+    content: string,
+    userId: string | number = 'tempUser',
+  ): Promise<string> {
+    this.throttleRequest(String(userId));
+
     const allowedEmotions = ['Happy', 'Sad', 'Exhausted', 'Angry'];
     const openai = this.openAIProvider.getInstance();
 

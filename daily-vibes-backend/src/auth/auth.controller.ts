@@ -18,7 +18,7 @@ export class AuthController {
       httpOnly: false,
       secure: false,
       path: '/',
-      // sameSite: 'lax',
+      sameSite: 'lax',
     });
 
     return res.status(200).json({ message: 'Login successful' });
@@ -46,8 +46,8 @@ export class AuthController {
       httpOnly: false,
       secure: false,
       path: '/',
+      sameSite: 'lax',
       // maxAge: 1000 * 4,
-      // sameSite: 'lax',
     });
 
     return res.status(200).json({ message: 'Login successful' });

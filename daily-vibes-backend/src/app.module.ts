@@ -16,6 +16,9 @@ import { AuthModule } from './auth/auth.module';
     UserModule,
     DiaryModule,
     CommonModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
     TypeOrmModule.forRoot({
       type: process.env.DB_TYPE as 'postgres',
       host: process.env.DB_HOST,
