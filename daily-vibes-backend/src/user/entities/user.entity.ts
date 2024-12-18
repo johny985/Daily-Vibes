@@ -15,6 +15,8 @@ export class User extends BaseTable {
   @Exclude()
   password: string;
 
-  @OneToMany(() => Diary, (diary) => diary.user)
+  @OneToMany(() => Diary, (diary) => diary.user, {
+    cascade: true,
+  })
   diaries: Diary[];
 }

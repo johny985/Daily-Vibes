@@ -13,7 +13,9 @@ export class Diary extends BaseTable {
   @Column()
   vibe: string;
 
-  @ManyToOne(() => User, (user) => user.diaries)
+  @ManyToOne(() => User, (user) => user.diaries, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @Column()

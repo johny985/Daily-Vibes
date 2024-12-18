@@ -1,4 +1,11 @@
-import { Controller, Post, Body, UseInterceptors } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UseInterceptors,
+  Get,
+  Query,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { TransactionInterceptor } from 'src/common/interceptors/transaction.interceptor';
@@ -11,5 +18,11 @@ export class UserController {
   @UseInterceptors(TransactionInterceptor)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Get('findUser')
+  async findUser(@Query('email') email: string) {
+    const result = (await this.userService.findOne(email)) || {};
+    return result;
   }
 }

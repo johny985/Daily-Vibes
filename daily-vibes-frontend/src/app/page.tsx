@@ -7,6 +7,7 @@ import {
   fetchLocalDiaryOnDate,
   saveLocalDiaryEntry,
 } from "./common/common.helper";
+import { toast } from "react-toastify";
 
 export default function Diary() {
   const [date, setDate] = useState(() => {
@@ -83,32 +84,33 @@ export default function Diary() {
       });
 
       setEditable(false);
-      return;
-    }
+    } else {
+      try {
+        const response = await fetch("http://localhost:3001/diary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            content: diary,
+            contentDate: formattedDate,
+          }),
+        });
 
-    try {
-      const response = await fetch("http://localhost:3001/diary", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          content: diary,
-          contentDate: formattedDate,
-        }),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Diary content saved:", data);
-        setEditable(false);
-      } else {
-        throw new Error("Failed to save diary content");
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Diary content saved:", data);
+          setEditable(false);
+        } else {
+          throw new Error("Failed to save diary content");
+        }
+      } catch (error) {
+        toast.error("Failed to save diary content. Please try again.");
       }
-    } catch (error) {
-      console.error("Failed to save diary content:", error);
     }
+
+    toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
 
   return (

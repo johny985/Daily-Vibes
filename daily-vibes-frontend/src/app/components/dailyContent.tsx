@@ -7,6 +7,7 @@ import {
   fetchLocalDiaryOnDate,
   saveLocalDiaryEntry,
 } from "../common/common.helper";
+import { toast } from "react-toastify";
 
 export default function DailyContent({
   date,
@@ -19,7 +20,7 @@ export default function DailyContent({
   onSave: (newMood: any) => void;
   setHasEdited?: (hasEdited: boolean) => void;
 }) {
-  const stringDate = date.toLocaleDateString();
+  const formattedDate = date.toLocaleDateString();
   const [editable, setEditable] = useState(true);
   const [diary, setDiary] = useState("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -28,7 +29,7 @@ export default function DailyContent({
   useEffect(() => {
     const fetchDiaryContent = async () => {
       if (document.cookie.includes("tempUser")) {
-        const diaryEntry = fetchLocalDiaryOnDate(stringDate);
+        const diaryEntry = fetchLocalDiaryOnDate(formattedDate);
 
         if (diaryEntry) {
           setDiary(diaryEntry.content);
@@ -44,7 +45,7 @@ export default function DailyContent({
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${stringDate}`,
+          `http://localhost:3001/diary?date=${formattedDate}`,
           { credentials: "include" }
         );
 
@@ -68,7 +69,7 @@ export default function DailyContent({
     };
 
     fetchDiaryContent();
-  }, [stringDate]);
+  }, [formattedDate]);
 
   const handleDiaryUpdate = async () => {
     if (!diary) {
@@ -84,7 +85,7 @@ export default function DailyContent({
     if (document.cookie.includes("tempUser")) {
       const newMood = {
         content: diary,
-        contentDate: stringDate,
+        contentDate: formattedDate,
       };
 
       const vibe = await saveLocalDiaryEntry({
@@ -92,40 +93,40 @@ export default function DailyContent({
       });
 
       onSave({ ...newMood, vibe });
-      onClose(true);
-      return;
-    }
+    } else {
+      try {
+        const response = await fetch("http://localhost:3001/diary", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            content: diary,
+            contentDate: formattedDate,
+          }),
+        });
 
-    try {
-      const response = await fetch("http://localhost:3001/diary", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          content: diary,
-          contentDate: stringDate,
-        }),
-      });
+        if (response.ok) {
+          const data = await response.json();
 
-      if (response.ok) {
-        const data = await response.json();
+          const newMood = {
+            content: diary,
+            contentDate: formattedDate,
+            vibe: data.vibe,
+          };
 
-        const newMood = {
-          content: diary,
-          contentDate: stringDate,
-          vibe: data.vibe,
-        };
-
-        onSave(newMood);
-        onClose(true);
-      } else {
-        throw new Error("Failed to save diary content");
+          onSave(newMood);
+        } else {
+          throw new Error("Failed to save diary content");
+        }
+      } catch (error) {
+        toast.error("Failed to save diary content. Please try again.");
       }
-    } catch (error) {
-      console.error("Failed to save diary content:", error);
     }
+
+    onClose(true);
+    toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
 
   const handleDeleteClick = () => {
@@ -134,15 +135,15 @@ export default function DailyContent({
 
   const confirmDelete = async () => {
     if (document.cookie.includes("tempUser")) {
-      deleteLocalDiaryEntry(stringDate);
-      onSave({ contentDate: stringDate, content: "", vibe: "" });
+      deleteLocalDiaryEntry(formattedDate);
+      onSave({ contentDate: formattedDate, content: "", vibe: "" });
       onClose();
       return;
     }
 
     try {
       const response = await fetch(
-        `http://localhost:3001/diary?date=${stringDate}`,
+        `http://localhost:3001/diary?date=${formattedDate}`,
         {
           method: "DELETE",
           credentials: "include",
@@ -150,7 +151,7 @@ export default function DailyContent({
       );
 
       if (response.ok) {
-        onSave({ contentDate: stringDate, content: "", vibe: "" });
+        onSave({ contentDate: formattedDate, content: "", vibe: "" });
         onClose();
       } else {
         throw new Error("Failed to delete diary content");
