@@ -51,9 +51,6 @@
 
 .button {
   background-color: #0070f3;
-  display: block;
-  width: 50%;
-  margin: 0 auto;
   text-align: center;
   color: white;
   border: none;
@@ -68,17 +65,25 @@
   background-color: #005bb5;
 }
 
+.buttonMain {
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+}
+
+.buttonSub {
+  width: 30%;
+  margin: 0 1rem;
+  background-color: #32587e;
+}
+
 .footer {
   margin-top: 1rem;
   font-size: 0.9rem;
   color: #666;
 }
 
-.link {
-  color: #0070f3;
-  text-decoration: none;
-}
-
-.link:hover {
-  text-decoration: underline;
+.lineBreak {
+  margin: 1rem 0;
+  border-bottom: 0.1rem solid #ddd;
 }

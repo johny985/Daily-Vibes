@@ -71,27 +71,30 @@ export default function LoginPage() {
             required
           />
         </div>
-        <button onClick={() => handleAuth("login")} className={styles.button}>
+        <button
+          onClick={() => handleAuth("login")}
+          className={`${styles.button} ${styles.buttonMain}`}
+        >
           Login
         </button>
-        &nbsp;
+
+        <p className={styles.lineBreak} />
+
         <button
           onClick={() => handleAuth("setTempUser")}
-          className={styles.button}
-          title="Log in as a temporary user. Data will only be stored in local memory and won't persist after the session."
+          className={`${styles.button} ${styles.buttonSub}`}
         >
           Temp User
         </button>
+        <button
+          onClick={() => router.push("/signup")}
+          className={`${styles.button} ${styles.buttonSub}`}
+        >
+          Sign Up
+        </button>
         <p className={styles.footer}>
-          Allows the user to log in as a temporary user. Data created during
-          this session will only be stored in local memory and will not persist
-          once the session is closed.{" "}
-        </p>
-        <p className={styles.footer}>
-          Don’t have an account?{" "}
-          <Link href="/signup" className={styles.link}>
-            Sign up
-          </Link>
+          Log in as a temporary user will only store the data in local memory
+          and wont persist after the session.
         </p>
       </div>
     </div>
