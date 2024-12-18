@@ -62,19 +62,24 @@
 }
 
 .button:hover {
-  background-color: #005bb5;
+  background-color: darkgreen;
 }
 
 .buttonMain {
   display: block;
   width: 50%;
   margin: 0 auto;
+  background-color: green;
 }
 
 .buttonSub {
   width: 30%;
   margin: 0 1rem;
-  background-color: #32587e;
+  background-color: #3f563e;
+}
+
+.buttonSub:hover {
+  background-color: #293929;
 }
 
 .footer {
