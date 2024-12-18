@@ -6,6 +6,7 @@ import Link from "next/link";
 import Error from "next/error";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contexts/userContext";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -13,7 +14,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState("test@test.com");
   const [password, setPassword] = useState("test");
-  const [errorMessage, setErrorMessage] = useState("");
 
   const handleAuth = async (endpoint: "login" | "setTempUser") => {
     try {
@@ -31,8 +31,9 @@ export default function LoginPage() {
 
       router.push("/");
       setLoggedIn(true);
+      toast.success("Logged in successfully");
     } catch (error: any) {
-      setErrorMessage(error.message);
+      toast.error("Please check your email and password");
     }
   };
 
@@ -70,7 +71,6 @@ export default function LoginPage() {
             required
           />
         </div>
-        {errorMessage && <p className={styles.error}>{errorMessage}</p>}
         <button onClick={() => handleAuth("login")} className={styles.button}>
           Login
         </button>
@@ -83,7 +83,7 @@ export default function LoginPage() {
         </button>
         <p className={styles.footer}>
           Don’t have an account?{" "}
-          <Link href="/register" className={styles.link}>
+          <Link href="/signup" className={styles.link}>
             Sign up
           </Link>
         </p>

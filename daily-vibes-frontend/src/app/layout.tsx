@@ -1,6 +1,8 @@
 import style from "./layout.module.css";
 import Header from "./components/header";
 import { UserProvider } from "./contexts/userContext";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RootLayout({
   children,
@@ -21,6 +23,13 @@ export default function RootLayout({
             </main>
             <footer>RORORO</footer>
           </div>
+          <ToastContainer
+            position="bottom-center"
+            autoClose={1500}
+            hideProgressBar={true}
+            newestOnTop={true}
+            closeOnClick
+          />
           <div id="modal-root"></div>
         </UserProvider>
       </body>
