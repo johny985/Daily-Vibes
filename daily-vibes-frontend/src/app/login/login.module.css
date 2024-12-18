@@ -51,6 +51,10 @@
 
 .button {
   background-color: #0070f3;
+  display: block;
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
   color: white;
   border: none;
   padding: 0.8rem;
