@@ -156,7 +156,7 @@ export default function Home() {
     <div className={calendarStyles.calendarContainer}>
       <div>
         <button
-          className={calendarStyles.goToTodayButton}
+          className={calendarStyles.goToCurrentButton}
           onClick={goToCurrentMonth}
         >
           To Current Month

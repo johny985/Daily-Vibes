@@ -9,7 +9,7 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req, @Response() res) {
+  async login(@Request() req, @Response({ passthrough: true }) res) {
     const { access_token } = await this.authService.login(req.user);
     console.log('Access Token:', access_token);
 
@@ -21,11 +21,11 @@ export class AuthController {
       sameSite: 'lax',
     });
 
-    return res.status(200).json({ message: 'Login successful' });
+    return { message: 'Login successful' };
   }
 
   @Post('logout')
-  async logout(@Request() req, @Response() res) {
+  async logout(@Request() req, @Response({ passthrough: true }) res) {
     if (req.logout) {
       req.logout();
     }
@@ -34,11 +34,11 @@ export class AuthController {
       path: '/',
     });
 
-    return res.status(200).json({ message: 'Logged out successfully' });
+    return { message: 'Logged out successfully' };
   }
 
   //TODO: Fix the name, cookie expiracy time
-  @Post('setTempUser')
+  @Post('temp-user')
   async setTempUser(@Request() req, @Response() res) {
     const tempUser = true;
 

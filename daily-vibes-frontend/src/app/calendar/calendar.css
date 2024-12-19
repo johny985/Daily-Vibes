@@ -76,7 +76,7 @@
 }
 
 .react-calendar__tile--now {
-  background: #aeb5bd;
+  background: #e1b1b1 !important;
   color: white;
   border-radius: 16px;
 }
@@ -88,9 +88,14 @@
 }
 
 .react-calendar__tile--active {
-  background: #3c9bfa;
+  background: #ffffff;
   border-radius: 16px;
-  color: white;
+  color: rgb(0, 0, 0);
+}
+.react-calendar__tile--active.react-calendar__month-view__days__day--weekend {
+  background: #ffffff;
+  border-radius: 16px;
+  color: rgb(255, 0, 0);
 }
 
 .react-calendar__navigation__label__labelText {

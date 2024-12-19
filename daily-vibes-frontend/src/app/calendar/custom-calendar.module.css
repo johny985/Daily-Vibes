@@ -4,8 +4,8 @@
   /* align-items: center; */
 }
 
-.goToTodayButton {
-  background-color: #707274;
+.goToCurrentButton {
+  background-color: #46a020;
   color: white;
   border: none;
   border-radius: 5px;
@@ -17,6 +17,6 @@
   transition: background-color 0.3s;
 }
 
-.goToTodayButton:hover {
-  background-color: #005bb5;
+.goToCurrentButton:hover {
+  background-color: #377b19;
 }

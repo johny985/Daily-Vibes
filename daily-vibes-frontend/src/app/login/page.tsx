@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import styles from "./login.module.css";
-import Link from "next/link";
 import Error from "next/error";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contexts/userContext";
@@ -15,7 +14,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleAuth = async (endpoint: "login" | "setTempUser") => {
+  const handleAuth = async (endpoint: "login" | "temp-user") => {
     try {
       const response = await fetch(`http://localhost:3001/auth/${endpoint}`, {
         method: "POST",
@@ -68,6 +67,7 @@ export default function LoginPage() {
             placeholder="Enter your password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleAuth("login")}
             required
           />
         </div>
@@ -81,7 +81,7 @@ export default function LoginPage() {
         <p className={styles.lineBreak} />
 
         <button
-          onClick={() => handleAuth("setTempUser")}
+          onClick={() => handleAuth("temp-user")}
           className={`${styles.button} ${styles.buttonSub}`}
         >
           Temp User
