@@ -12,8 +12,8 @@ export default function LoginPage() {
   const router = useRouter();
   const { setLoggedIn } = useUser();
 
-  const [email, setEmail] = useState("test@test.com");
-  const [password, setPassword] = useState("test");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const handleAuth = async (endpoint: "login" | "setTempUser") => {
     try {
