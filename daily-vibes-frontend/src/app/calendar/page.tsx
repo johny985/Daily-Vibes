@@ -7,6 +7,7 @@ import "./calendar.css";
 import DailyContent from "../components/dailyContent";
 import Modal from "../components/modal";
 import styles from "../components/dailyContent.module.css";
+import calendarStyles from "./custom-calendar.module.css";
 import CalendarSkeleton from "../skeleton/calendarSkeleton";
 
 const Calendar = dynamic(() => import("react-calendar"), {
@@ -20,6 +21,7 @@ export default function Home() {
   const [dailyData, setDailyData] = useState<any>([]);
   const [hasEdited, setHasEdited] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
 
   const updateDailyData = (newMood: any) => {
     setHasEdited(false);
@@ -86,6 +88,8 @@ export default function Home() {
   };
 
   const handleMonthChange = async ({ action, view, activeStartDate }: any) => {
+    setActiveStartDate(activeStartDate);
+
     if (
       (action === "drillDown" && view === "month") ||
       (action === "next" && view === "month") ||
@@ -126,22 +130,50 @@ export default function Home() {
     [dailyData]
   );
 
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() + 5);
+
+  const tileDisabled = ({ date, view }: { date: Date; view: string }) => {
+    if (view === "month") {
+      return date > new Date();
+    }
+    return false;
+  };
+
+  const goToCurrentMonth = async () => {
+    if (!document.cookie.includes("tempUser")) {
+      const today = new Date();
+      const year = today.getFullYear();
+      const month = today.getMonth() + 1;
+
+      await fetchDiaryContent(year, month);
+    }
+
+    setActiveStartDate(new Date()); // Navigate to the current month
+  };
+
   return (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <div className={calendarStyles.calendarContainer}>
+      <div>
+        <button
+          className={calendarStyles.goToTodayButton}
+          onClick={goToCurrentMonth}
+        >
+          To Current Month
+        </button>
+      </div>
       <Calendar
         next2Label={null}
         prev2Label={null}
         showNeighboringMonth={false}
         onClickDay={handleDayClick}
         onActiveStartDateChange={handleMonthChange}
+        activeStartDate={activeStartDate}
         tileContent={tileContent}
         locale="en-US"
+        minDate={new Date("1980-01-01")}
+        maxDate={maxDate}
+        tileDisabled={tileDisabled}
       />
 
       {isModalOpen && (
