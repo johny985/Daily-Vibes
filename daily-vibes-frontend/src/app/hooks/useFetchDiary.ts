@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 
 export default function useFetchDiary() {
   const [dailyData, setDailyData] = useState<any>([]);
+  const [isLoading, setLoading] = useState(true);
 
   const fetchDiaryContent = async (year: number, month: number) => {
+    setLoading(true);
+
     if (document.cookie.includes("tempUser")) {
       if (!localStorage.diaryEntries) return;
 
@@ -31,6 +34,8 @@ export default function useFetchDiary() {
       }
     } catch (error) {
       console.error("Error fetching diary content:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,5 +47,5 @@ export default function useFetchDiary() {
     fetchDiaryContent(currentYear, currentMonth);
   }, []);
 
-  return { dailyData, setDailyData, fetchDiaryContent };
+  return { dailyData, setDailyData, fetchDiaryContent, isLoading };
 }
