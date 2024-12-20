@@ -21,10 +21,13 @@ export default function Header() {
     }
 
     try {
-      const response = await fetch("http://localhost:3001/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+        {
+          method: "POST",
+          credentials: "include",
+        }
+      );
 
       if (response.ok) {
         setLoggedIn(false);

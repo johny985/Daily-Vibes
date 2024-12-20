@@ -16,12 +16,15 @@ export default function LoginPage() {
 
   const handleAuth = async (endpoint: "login" | "temp-user") => {
     try {
-      const response = await fetch(`http://localhost:3001/auth/${endpoint}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify({ username: email, password }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/${endpoint}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ username: email, password }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

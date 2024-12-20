@@ -19,7 +19,7 @@ export default function SignUpPage() {
 
     try {
       const response = await fetch(
-        `http://localhost:3001/user/findUser?email=${email}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/user/findUser?email=${email}`,
         {
           method: "GET",
           headers: {
@@ -43,7 +43,7 @@ export default function SignUpPage() {
 
   const signUp = async () => {
     try {
-      const response = await fetch(`http://localhost:3001/user`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
         method: "POST",
         body: JSON.stringify({ email, password }),
         headers: {

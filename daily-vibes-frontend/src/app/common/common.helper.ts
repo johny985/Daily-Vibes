@@ -9,14 +9,17 @@ export function fetchLocalDiaryOnDate(date: string) {
 }
 
 export async function saveLocalDiaryEntry(entry: any) {
-  const response = await fetch("http://localhost:3001/diary/vibe", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({ content: entry.content }),
-  });
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/diary/vibe`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+      body: JSON.stringify({ content: entry.content }),
+    }
+  );
 
   if (!response.ok) {
     throw new Error("Failed to fetch vibe");

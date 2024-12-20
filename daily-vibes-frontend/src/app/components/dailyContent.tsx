@@ -45,7 +45,7 @@ export default function DailyContent({
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${formattedDate}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
           { credentials: "include" }
         );
 
@@ -95,17 +95,20 @@ export default function DailyContent({
       onSave({ ...newMood, vibe });
     } else {
       try {
-        const response = await fetch("http://localhost:3001/diary", {
-          method: "POST",
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            content: diary,
-            contentDate: formattedDate,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/diary`,
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              content: diary,
+              contentDate: formattedDate,
+            }),
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();
@@ -143,7 +146,7 @@ export default function DailyContent({
 
     try {
       const response = await fetch(
-        `http://localhost:3001/diary?date=${formattedDate}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
         {
           method: "DELETE",
           credentials: "include",

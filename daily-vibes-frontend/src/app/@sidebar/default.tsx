@@ -20,6 +20,12 @@ export default function Sidebar() {
         <li className={styles.menuItem} onClick={() => handleClick("calendar")}>
           <span>- Diary Calendar</span>
         </li>
+        <li
+          className={styles.menuItem}
+          onClick={() => handleClick("vibe-statistic")}
+        >
+          <span>- Vibe Statics</span>
+        </li>
         <li className={styles.menuItem} onClick={() => handleClick("about")}>
           <span>- About Daily Vibes</span>
         </li>

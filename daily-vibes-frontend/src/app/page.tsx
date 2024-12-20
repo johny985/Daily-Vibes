@@ -43,7 +43,7 @@ export default function Diary() {
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `http://localhost:3001/diary?date=${formattedDate}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
           { credentials: "include" }
         );
 
@@ -86,17 +86,20 @@ export default function Diary() {
       setEditable(false);
     } else {
       try {
-        const response = await fetch("http://localhost:3001/diary", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include",
-          body: JSON.stringify({
-            content: diary,
-            contentDate: formattedDate,
-          }),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/diary`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              content: diary,
+              contentDate: formattedDate,
+            }),
+          }
+        );
 
         if (response.ok) {
           const data = await response.json();

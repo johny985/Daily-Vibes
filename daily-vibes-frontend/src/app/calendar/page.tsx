@@ -9,6 +9,7 @@ import Modal from "../components/modal";
 import styles from "../components/dailyContent.module.css";
 import calendarStyles from "./custom-calendar.module.css";
 import CalendarSkeleton from "../skeleton/calendarSkeleton";
+import useFetchDiary from "../hooks/useFetchDiary";
 
 const Calendar = dynamic(() => import("react-calendar"), {
   ssr: false,
@@ -16,9 +17,10 @@ const Calendar = dynamic(() => import("react-calendar"), {
 });
 
 export default function Home() {
+  const { dailyData, setDailyData, fetchDiaryContent } = useFetchDiary();
+
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [dailyData, setDailyData] = useState<any>([]);
   const [hasEdited, setHasEdited] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
@@ -33,46 +35,6 @@ export default function Home() {
       newMood,
     ]);
   };
-
-  const fetchDiaryContent = async (year: number, month: number) => {
-    if (document.cookie.includes("tempUser")) {
-      if (!localStorage.diaryEntries) return;
-
-      const diaries = JSON.parse(localStorage.diaryEntries);
-
-      setDailyData(diaries);
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        `http://localhost:3001/diary?year=${year}&month=${month}`,
-        {
-          credentials: "include",
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-
-        if (data) {
-          setDailyData(data);
-        }
-      } else {
-        console.error("Failed to fetch diary content");
-      }
-    } catch (error) {
-      console.error("Error fetching diary content:", error);
-    }
-  };
-
-  useEffect(() => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
-
-    fetchDiaryContent(currentYear, currentMonth);
-  }, []);
 
   const handleDayClick = (value: Date) => {
     setSelectedDate(value);
@@ -105,6 +67,7 @@ export default function Home() {
   const tileContent = useCallback(
     ({ date }: { date: Date }) => {
       if (dailyData?.length) {
+        debugger;
         for (let i = 0; i < dailyData.length; i++) {
           const calendarDate = date.toLocaleDateString();
           const contentDate = dailyData[i].contentDate;
@@ -149,7 +112,7 @@ export default function Home() {
       await fetchDiaryContent(year, month);
     }
 
-    setActiveStartDate(new Date()); // Navigate to the current month
+    setActiveStartDate(new Date());
   };
 
   return (
