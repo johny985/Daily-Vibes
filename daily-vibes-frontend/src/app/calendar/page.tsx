@@ -4,11 +4,11 @@ import { useCallback, useEffect, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
-import DailyContent from "../components/dailyContent";
+import DailyContent from "../components/daily-content";
 import Modal from "../components/modal";
 import styles from "../components/dailyContent.module.css";
 import calendarStyles from "./custom-calendar.module.css";
-import CalendarSkeleton from "../skeleton/calendarSkeleton";
+import CalendarSkeleton from "../skeleton/calendar-skeleton";
 import useFetchDiary from "../hooks/useFetchDiary";
 
 const Calendar = dynamic(() => import("react-calendar"), {

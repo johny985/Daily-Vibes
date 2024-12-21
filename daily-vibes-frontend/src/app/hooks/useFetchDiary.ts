@@ -1,6 +1,12 @@
 // useFetchDiary.ts
 import { useEffect, useState } from "react";
 
+interface Diary {
+  content: string;
+  contentDate: string;
+  vibe: string;
+}
+
 export default function useFetchDiary() {
   const [dailyData, setDailyData] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
@@ -11,8 +17,17 @@ export default function useFetchDiary() {
     if (document.cookie.includes("tempUser")) {
       if (!localStorage.diaryEntries) return;
 
-      const diaries = JSON.parse(localStorage.diaryEntries);
-      setDailyData(diaries);
+      const diaries: Diary[] = JSON.parse(localStorage.diaryEntries);
+
+      const filteredDiares = diaries.filter((diary: Diary) => {
+        const diaryDate = new Date(diary.contentDate);
+        return (
+          diaryDate.getFullYear() === year && diaryDate.getMonth() + 1 === month
+        );
+      });
+      debugger;
+      setDailyData(filteredDiares);
+      setLoading(false);
       return;
     }
 
@@ -25,7 +40,7 @@ export default function useFetchDiary() {
       );
 
       if (response.ok) {
-        const data = await response.json();
+        const data: Diary[] = await response.json();
         if (data) {
           setDailyData(data);
         }

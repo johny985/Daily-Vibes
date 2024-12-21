@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense, ChangeEvent } from "react";
+import { useState, useEffect, ChangeEvent } from "react";
 import useFetchDiary from "../hooks/useFetchDiary";
 import {
   BarChart,
@@ -13,7 +13,8 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import CalendarSkeleton from "../skeleton/calendarSkeleton";
+import CalendarSkeleton from "../skeleton/calendar-skeleton";
+import styles from "./vibe-statistic.module.css"; // Updated import for CSS module
 
 interface ChartData {
   name: string;
@@ -36,7 +37,8 @@ export default function Page() {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
 
-    return `${currentYear}-${currentMonth}`;
+    // Ensure month is two digits
+    return `${currentYear}-${currentMonth.toString().padStart(2, "0")}`;
   });
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -68,16 +70,17 @@ export default function Page() {
   };
 
   return (
-    <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-      <h1>Diary Entries</h1>
-      <p>
-        <label>
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Diary Entries</h1>
+      <p className={styles.dateParagraph}>
+        <label htmlFor="date" className={styles.label}>
           Date:
           <input
             type="month"
+            id="date"
             value={date}
             onChange={handleDateChange}
-            style={{ marginLeft: "10px", padding: "5px" }}
+            className={styles.dateInput}
           />
         </label>
       </p>
@@ -85,44 +88,38 @@ export default function Page() {
       {isLoading && <CalendarSkeleton />}
 
       {!isLoading && dailyData.length === 0 && (
-        <p>No diary entries found for the selected month.</p>
+        <p className={styles.noEntries}>
+          No diary entries found for the selected month.
+        </p>
       )}
 
       {!isLoading && dailyData.length > 0 && (
-        <>
-          <div
-            style={{
-              width: "100%",
-              height: "400px",
-              marginTop: "40px",
-            }}
-          >
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart
-                data={chartData}
-                margin={{
-                  top: 20,
-                  right: 30,
-                  bottom: 5,
-                }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
-                <YAxis allowDecimals={false} />
-                <Tooltip />
-                <Legend />
-                <Bar dataKey="count" name="Vibe Count">
-                  {chartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={vibeDetails[entry.vibe]?.color || "#8884d8"}
-                    />
-                  ))}
-                </Bar>
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </>
+        <div className={styles.chartContainer}>
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart
+              data={chartData}
+              margin={{
+                top: 20,
+                right: 30,
+                bottom: 5,
+              }}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis allowDecimals={false} />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count" name="Vibe Count">
+                {chartData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={vibeDetails[entry.vibe]?.color || "#8884d8"}
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       )}
     </div>
   );

@@ -1,4 +1,4 @@
-import styles from "./calendarSkeleton.module.css";
+import styles from "./calendar-skeleton.module.css";
 
 export default function CalendarSkeleton() {
   return (
