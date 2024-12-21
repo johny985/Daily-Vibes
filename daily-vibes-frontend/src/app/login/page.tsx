@@ -1,20 +1,122 @@
 "use client";
 
-import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
 import styles from "./login.module.css";
-import Error from "next/error";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contexts/userContext";
 import { toast } from "react-toastify";
+
+interface LoginFormInputs {
+  email: string;
+  password: string;
+}
+
+const EmailField = function ({
+  register,
+  errors,
+}: {
+  register: ReturnType<typeof useForm<LoginFormInputs>>["register"];
+  errors: {
+    email?: {
+      message?: string;
+    };
+  };
+}) {
+  return (
+    <div className={styles.inputGroup}>
+      <label htmlFor="email" className={styles.label}>
+        Email
+      </label>
+      <input
+        type="email"
+        id="email"
+        {...register("email", {
+          required: "Email is required",
+          pattern: {
+            value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+            message: "Invalid email address",
+          },
+        })}
+        className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+        placeholder="Enter your email"
+        aria-invalid={errors.email ? "true" : "false"}
+      />
+      {errors.email && (
+        <span role="alert" className={styles.error}>
+          {errors.email.message}
+        </span>
+      )}
+    </div>
+  );
+};
+
+const PasswordField = function ({
+  register,
+  errors,
+}: {
+  register: ReturnType<typeof useForm<LoginFormInputs>>["register"];
+  errors: {
+    password?: {
+      message?: string;
+    };
+  };
+}) {
+  return (
+    <div className={styles.inputGroup}>
+      <label htmlFor="password" className={styles.label}>
+        Password
+      </label>
+      <input
+        type="password"
+        id="password"
+        {...register("password", {
+          required: "Password is required",
+          minLength: {
+            value: 6,
+            message: "Password must be at least 6 characters",
+          },
+        })}
+        className={`${styles.input} ${
+          errors.password ? styles.inputError : ""
+        }`}
+        placeholder="Enter your password"
+        aria-invalid={errors.password ? "true" : "false"}
+      />
+      {errors.password && (
+        <span role="alert" className={styles.error}>
+          {errors.password.message}
+        </span>
+      )}
+    </div>
+  );
+};
 
 export default function LoginPage() {
   const router = useRouter();
   const { setLoggedIn } = useUser();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginFormInputs>();
 
-  const handleAuth = async (endpoint: "login" | "temp-user") => {
+  const handleAuth: SubmitHandler<LoginFormInputs> = async (data) => {
+    await authenticate("login", data);
+  };
+
+  const handleTempUser = async () => {
+    const tempData: LoginFormInputs = {
+      email: "tempuser@example.com",
+      password: "temporary",
+    };
+    await authenticate("temp-user", tempData);
+  };
+
+  const authenticate = async (
+    endpoint: "login" | "temp-user",
+    credentials: LoginFormInputs
+  ) => {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/auth/${endpoint}`,
@@ -22,7 +124,10 @@ export default function LoginPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify({ username: email, password }),
+          body: JSON.stringify({
+            username: credentials.email,
+            password: credentials.password,
+          }),
         }
       );
 
@@ -35,7 +140,7 @@ export default function LoginPage() {
       setLoggedIn(true);
       toast.success("Logged in successfully");
     } catch (error: any) {
-      toast.error("Please check your email and password");
+      toast.error(error.message || "Please check your email and password");
     }
   };
 
@@ -43,62 +148,42 @@ export default function LoginPage() {
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>Login</h1>
-        <div className={styles.inputGroup}>
-          <label htmlFor="email" className={styles.label}>
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            className={styles.input}
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <div className={styles.inputGroup}>
-          <label htmlFor="password" className={styles.label}>
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            className={styles.input}
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleAuth("login")}
-            required
-          />
-        </div>
-        <button
-          onClick={() => handleAuth("login")}
-          className={`${styles.button} ${styles.buttonMain}`}
-        >
-          Login
-        </button>
+        <form onSubmit={handleSubmit(handleAuth)} noValidate>
+          <EmailField register={register} errors={errors} />
 
-        <p className={styles.lineBreak} />
+          <PasswordField register={register} errors={errors} />
 
-        <button
-          onClick={() => handleAuth("temp-user")}
-          className={`${styles.button} ${styles.buttonSub}`}
-        >
-          Temp User
-        </button>
-        <button
-          onClick={() => router.push("/signup")}
-          className={`${styles.button} ${styles.buttonSub}`}
-        >
-          Sign Up
-        </button>
-        <p className={styles.footer}>
-          Log in as a temporary user will only store the data in local memory
-          and wont persist after the session.
-        </p>
+          <button
+            type="submit"
+            className={`${styles.button} ${styles.buttonMain}`}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Logging in..." : "Login"}
+          </button>
+
+          <p className={styles.lineBreak} />
+
+          <button
+            type="button"
+            onClick={handleTempUser}
+            className={`${styles.button} ${styles.buttonSub}`}
+            disabled={isSubmitting}
+          >
+            Temp User
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/signup")}
+            className={`${styles.button} ${styles.buttonSub}`}
+            disabled={isSubmitting}
+          >
+            Sign Up
+          </button>
+          <p className={styles.footer}>
+            Logging in as a temporary user will only store the data in local
+            memory and will not persist after the session.
+          </p>
+        </form>
       </div>
     </div>
   );

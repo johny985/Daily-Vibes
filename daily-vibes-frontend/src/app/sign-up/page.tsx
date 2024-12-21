@@ -1,25 +1,162 @@
 "use client";
-import { useState } from "react";
+
+import { useForm, SubmitHandler } from "react-hook-form";
 import styles from "./sign-up.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import React from "react";
+
+interface SignUpFormInputs {
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
+const EmailField = function ({
+  register,
+  errors,
+  checkEmailDuplication,
+}: {
+  register: ReturnType<typeof useForm<SignUpFormInputs>>["register"];
+  errors: {
+    email?: {
+      message?: string;
+    };
+  };
+  checkEmailDuplication: (value: string) => Promise<true | string>;
+}) {
+  return (
+    <div className={styles.inputGroup}>
+      <label htmlFor="email" className={styles.label}>
+        Email
+      </label>
+      <input
+        type="email"
+        id="email"
+        {...register("email", {
+          required: "Email is required",
+          pattern: {
+            value: /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/,
+            message: "Invalid email address",
+          },
+          validate: async (value) => await checkEmailDuplication(value),
+        })}
+        className={`${styles.input} ${errors.email ? styles.inputError : ""}`}
+        placeholder="Enter your email"
+        aria-invalid={errors.email ? "true" : "false"}
+      />
+      {errors.email && (
+        <p role="alert" className={styles.error}>
+          {errors.email.message}
+        </p>
+      )}
+    </div>
+  );
+};
+
+const PasswordField = function ({
+  register,
+  errors,
+}: {
+  register: ReturnType<typeof useForm<SignUpFormInputs>>["register"];
+  errors: {
+    password?: {
+      message?: string;
+    };
+  };
+}) {
+  return (
+    <div className={styles.inputGroup}>
+      <label htmlFor="password" className={styles.label}>
+        Password
+      </label>
+      <input
+        type="password"
+        id="password"
+        {...register("password", {
+          required: "Password is required",
+          minLength: {
+            value: 8,
+            message: "Password must be at least 8 characters long",
+          },
+        })}
+        className={`${styles.input} ${
+          errors.password ? styles.inputError : ""
+        }`}
+        placeholder="Create a password"
+        aria-invalid={errors.password ? "true" : "false"}
+      />
+      {errors.password && (
+        <p role="alert" className={styles.error}>
+          {errors.password.message}
+        </p>
+      )}
+    </div>
+  );
+};
+
+const ConfirmPasswordField = function ({
+  register,
+  watchPassword,
+  errors,
+}: {
+  register: ReturnType<typeof useForm<SignUpFormInputs>>["register"];
+  watchPassword: string;
+  errors: {
+    confirmPassword?: {
+      message?: string;
+    };
+  };
+}) {
+  return (
+    <div className={styles.inputGroup}>
+      <label htmlFor="confirmPassword" className={styles.label}>
+        Confirm Password
+      </label>
+      <input
+        type="password"
+        id="confirmPassword"
+        {...register("confirmPassword", {
+          required: "Please confirm your password",
+          validate: (value) =>
+            value === watchPassword || "Passwords do not match",
+        })}
+        className={`${styles.input} ${
+          errors.confirmPassword ? styles.inputError : ""
+        }`}
+        placeholder="Confirm your password"
+        aria-invalid={errors.confirmPassword ? "true" : "false"}
+      />
+      {errors.confirmPassword && (
+        <p role="alert" className={styles.error}>
+          {errors.confirmPassword.message}
+        </p>
+      )}
+    </div>
+  );
+};
 
 export default function SignUpPage() {
   const router = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors, isSubmitting },
+  } = useForm<SignUpFormInputs>({
+    mode: "onBlur",
+  });
 
-  const [emailError, setEmailError] = useState("");
-  const [passwordError, setPasswordError] = useState("");
+  const watchPassword = watch("password", "");
 
-  const checkEmailDuplication = async () => {
-    if (!email) return;
-
+  const checkEmailDuplication = async (email: string) => {
+    if (!email) return true;
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/findUser?email=${email}`,
+        `${
+          process.env.NEXT_PUBLIC_API_URL
+        }/user/findUser?email=${encodeURIComponent(email)}`,
         {
           method: "GET",
           headers: {
@@ -31,114 +168,71 @@ export default function SignUpPage() {
       if (response.ok) {
         const data = await response.json();
         if (data?.email) {
-          setEmailError("Email already exists!");
+          return "Email already exists!";
         } else {
-          setEmailError("");
+          return true;
         }
+      } else {
+        return "Failed to verify email.";
       }
     } catch (error) {
-      console.error("Error checking email duplication:", error);
+      toast.error(`Failed to verify email.${error}`);
+      return "Failed to verify email.";
     }
   };
 
-  const signUp = async () => {
+  const onSubmit: SubmitHandler<SignUpFormInputs> = async (data) => {
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
         method: "POST",
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email: data.email, password: data.password }),
         headers: {
           "Content-Type": "application/json",
         },
       });
 
       if (response.ok) {
+        toast.success("Sign up successful!");
         router.push("/login");
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to sign up");
       }
-    } catch (error) {
-      console.error("Error checking email duplication:", error);
+    } catch (error: any) {
+      toast.error(error.message || "Failed to sign up. Please try again.");
     }
-  };
-
-  const handleSignUp = () => {
-    setPasswordError("");
-
-    if (password !== confirmPassword) {
-      setPasswordError("Passwords do not match!");
-      return;
-    }
-
-    if (password.length < 8) {
-      setPasswordError("Password must be at least 8 characters long!");
-      return;
-    }
-
-    if (emailError) return;
-
-    toast.success("Sign up successful!");
-    signUp();
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <h1 className={styles.title}>Sign Up</h1>
-        <div className={styles.form}>
-          <div className={styles.inputGroup}>
-            <label htmlFor="email" className={styles.label}>
-              Email
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              className={styles.input}
-              placeholder="Enter your email"
-              required
-              onBlur={checkEmailDuplication}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            {emailError && <p className={styles.error}>{emailError}</p>}
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="password" className={styles.label}>
-              Password
-            </label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              className={styles.input}
-              placeholder="Create a password"
-              required
-              onChange={(e) => setPassword(e.target.value)}
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="confirm-password" className={styles.label}>
-              Confirm Password
-            </label>
-            <input
-              type="password"
-              id="confirm-password"
-              name="confirm-password"
-              className={styles.input}
-              placeholder="Confirm your password"
-              required
-              onChange={(e) => setConfirmPassword(e.target.value)}
-            />
-            {passwordError && <p className={styles.error}>{passwordError}</p>}
-          </div>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={styles.form}
+          noValidate
+        >
+          <EmailField
+            register={register}
+            errors={errors}
+            checkEmailDuplication={checkEmailDuplication}
+          />
+          <PasswordField register={register} errors={errors} />
+          <ConfirmPasswordField
+            register={register}
+            watchPassword={watchPassword}
+            errors={errors}
+          />
 
           <button
-            type="button"
+            type="submit"
             className={styles.button}
-            onClick={handleSignUp}
+            disabled={isSubmitting}
           >
-            Sign Up
+            {isSubmitting ? "Signing up..." : "Sign Up"}
           </button>
-        </div>
+        </form>
+
         <p className={styles.footer}>
           Already have an account?{" "}
           <a href="/login" className={styles.link}>
