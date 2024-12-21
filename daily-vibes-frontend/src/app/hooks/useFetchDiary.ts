@@ -25,7 +25,7 @@ export default function useFetchDiary() {
           diaryDate.getFullYear() === year && diaryDate.getMonth() + 1 === month
         );
       });
-      debugger;
+
       setDailyData(filteredDiares);
       setLoading(false);
       return;

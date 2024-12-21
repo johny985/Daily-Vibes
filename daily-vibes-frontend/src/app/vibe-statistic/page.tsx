@@ -13,7 +13,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from "recharts";
-import CalendarSkeleton from "../skeleton/calendar-skeleton";
+import ChartSkeleton from "../skeleton/chart-skeleton";
 import styles from "./vibe-statistic.module.css"; // Updated import for CSS module
 
 interface ChartData {
@@ -85,7 +85,7 @@ export default function Page() {
         </label>
       </p>
 
-      {isLoading && <CalendarSkeleton />}
+      {isLoading && <ChartSkeleton />}
 
       {!isLoading && dailyData.length === 0 && (
         <p className={styles.noEntries}>

@@ -1,0 +1,38 @@
+.chartSkeleton {
+  width: 100%;
+  height: 400px;
+  background-color: #f0f0f0;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.skeletonHeader {
+  width: 30%;
+  height: 20px;
+  background-color: #e0e0e0;
+  margin: 20px;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+.skeletonBar {
+  width: 80%;
+  height: 30px;
+  background-color: #e0e0e0;
+  margin: 10px 20px;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    background-color: #e0e0e0;
+  }
+  50% {
+    background-color: #f8f8f8;
+  }
+  100% {
+    background-color: #e0e0e0;
+  }
+}
