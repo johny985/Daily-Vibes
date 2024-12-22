@@ -1,11 +1,6 @@
 // useFetchDiary.ts
+import { Diary } from "@/types";
 import { useEffect, useState } from "react";
-
-interface Diary {
-  content: string;
-  contentDate: string;
-  vibe: string;
-}
 
 export default function useFetchDiary() {
   const [dailyData, setDailyData] = useState<any>([]);

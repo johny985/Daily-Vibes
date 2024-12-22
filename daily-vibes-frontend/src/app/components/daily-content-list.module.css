@@ -1,0 +1,41 @@
+.dailyContentList {
+  max-width: 600px;
+  min-width: 600px;
+  padding: 20px;
+}
+
+.contentItem {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.contentItem:hover {
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.contentHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.vibe {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.contentDate {
+  margin: 0;
+  font-size: 1rem;
+  color: #888;
+}
+
+.contentText {
+  margin: 0;
+}

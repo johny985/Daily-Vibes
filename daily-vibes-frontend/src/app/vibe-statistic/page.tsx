@@ -15,12 +15,7 @@ import {
 } from "recharts";
 import ChartSkeleton from "../skeleton/chart-skeleton";
 import styles from "./vibe-statistic.module.css"; // Updated import for CSS module
-
-interface ChartData {
-  name: string;
-  vibe: string;
-  count: number;
-}
+import { ChartData } from "@/types";
 
 const vibeDetails: Record<string, { label: string; color: string }> = {
   Happy: { label: "😊 Happy", color: "#FFD700" },

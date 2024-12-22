@@ -4,7 +4,8 @@
   /* align-items: center; */
 }
 
-.goToCurrentButton {
+.goToCurrentButton,
+.toggleModeButton {
   background-color: #46a020;
   color: white;
   border: none;
@@ -15,6 +16,7 @@
   font-size: 0.8rem;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s;
+  margin-right: 10rem;
 }
 
 .goToCurrentButton:hover {

@@ -10,6 +10,8 @@ import styles from "../components/daily-content.module.css";
 import calendarStyles from "./custom-calendar.module.css";
 import CalendarSkeleton from "../skeleton/calendar-skeleton";
 import useFetchDiary from "../hooks/useFetchDiary";
+import DailyContentList from "../components/daily-content-list";
+import { Vibes } from "@/types";
 
 const Calendar = dynamic(() => import("react-calendar"), {
   ssr: false,
@@ -24,6 +26,7 @@ export default function Home() {
   const [hasEdited, setHasEdited] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
   const [activeStartDate, setActiveStartDate] = useState(new Date());
+  const [showCalendar, setShowCalendar] = useState(true);
 
   const updateDailyData = (newMood: any) => {
     setHasEdited(false);
@@ -64,6 +67,13 @@ export default function Home() {
     }
   };
 
+  const vibeObject: Vibes = {
+    Happy: "😊",
+    Sad: "😢",
+    Exhausted: "😩",
+    Angry: "😡",
+  };
+
   const tileContent = useCallback(
     ({ date }: { date: Date }) => {
       if (dailyData?.length) {
@@ -72,15 +82,12 @@ export default function Home() {
           const contentDate = dailyData[i].contentDate;
 
           if (calendarDate === contentDate) {
-            const vibe = dailyData[i].vibe;
+            const vibe = dailyData[i].vibe as keyof Vibes;
 
             if (!vibe) return;
 
             let emoji = "";
-            if (vibe === "Happy") emoji = "😊";
-            else if (vibe === "Sad") emoji = "😢";
-            else if (vibe === "Exhausted") emoji = "😩";
-            else if (vibe === "Angry") emoji = "😡";
+            if (vibe in vibeObject) emoji = vibeObject[vibe];
 
             return (
               <p style={{ fontSize: "3rem", marginTop: "0px" }}>{emoji}</p>
@@ -114,27 +121,51 @@ export default function Home() {
 
   return (
     <div className={calendarStyles.calendarContainer}>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: "20px",
+        }}
+      >
         <button
           className={calendarStyles.goToCurrentButton}
           onClick={goToCurrentMonth}
         >
           To Current Month
         </button>
+
+        <button
+          className={calendarStyles.toggleModeButton}
+          onClick={() => {
+            setShowCalendar((prev) => !prev);
+          }}
+        >
+          {showCalendar ? "Show List" : "Show Calendar"}
+        </button>
       </div>
-      <Calendar
-        next2Label={null}
-        prev2Label={null}
-        showNeighboringMonth={false}
-        onClickDay={handleDayClick}
-        onActiveStartDateChange={handleMonthChange}
-        activeStartDate={activeStartDate}
-        tileContent={tileContent}
-        locale="en-US"
-        minDate={new Date("1980-01-01")}
-        maxDate={maxDate}
-        tileDisabled={tileDisabled}
-      />
+
+      {showCalendar ? (
+        <Calendar
+          next2Label={null}
+          prev2Label={null}
+          showNeighboringMonth={false}
+          onClickDay={handleDayClick}
+          onActiveStartDateChange={handleMonthChange}
+          activeStartDate={activeStartDate}
+          tileContent={tileContent}
+          locale="en-US"
+          minDate={new Date("1980-01-01")}
+          maxDate={maxDate}
+          tileDisabled={tileDisabled}
+        />
+      ) : (
+        <DailyContentList
+          dailyData={dailyData}
+          handleDayClick={handleDayClick}
+          vibeObject={vibeObject}
+        />
+      )}
 
       {isModalOpen && (
         <DailyContent

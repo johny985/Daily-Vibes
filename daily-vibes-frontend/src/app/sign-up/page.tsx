@@ -5,12 +5,7 @@ import styles from "./sign-up.module.css";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import React from "react";
-
-interface SignUpFormInputs {
-  email: string;
-  password: string;
-  confirmPassword: string;
-}
+import { SignUpFormInputs } from "@/types";
 
 const EmailField = function ({
   register,

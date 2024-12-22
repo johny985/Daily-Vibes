@@ -5,11 +5,7 @@ import styles from "./login.module.css";
 import { useRouter } from "next/navigation";
 import { useUser } from "../contexts/userContext";
 import { toast } from "react-toastify";
-
-interface LoginFormInputs {
-  email: string;
-  password: string;
-}
+import { LoginFormInputs } from "@/types";
 
 const EmailField = function ({
   register,
