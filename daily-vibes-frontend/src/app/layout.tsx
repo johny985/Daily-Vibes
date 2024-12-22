@@ -1,3 +1,4 @@
+import "./globals.css";
 import style from "./layout.module.css";
 import Header from "./components/header";
 import { UserProvider } from "./contexts/userContext";
