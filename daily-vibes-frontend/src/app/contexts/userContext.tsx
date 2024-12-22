@@ -8,6 +8,8 @@ import {
 } from "react";
 
 type UserContextType = {
+  loggedInUser: string;
+  setLoggedInUser: (email: string) => void;
   loggedIn: boolean;
   setLoggedIn: (status: boolean) => void;
 };
@@ -16,6 +18,7 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [loggedIn, setLoggedIn] = useState<any>(null);
+  const [loggedInUser, setLoggedInUser] = useState<any>(null);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
@@ -36,7 +39,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ loggedIn, setLoggedIn }}>
+    <UserContext.Provider
+      value={{ loggedIn, setLoggedIn, loggedInUser, setLoggedInUser }}
+    >
       {children}
     </UserContext.Provider>
   );

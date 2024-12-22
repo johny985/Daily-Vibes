@@ -5,7 +5,7 @@ import styles from "./header.module.css";
 
 export default function Header() {
   const router = useRouter();
-  const { loggedIn, setLoggedIn } = useUser();
+  const { loggedIn, setLoggedIn, loggedInUser, setLoggedInUser } = useUser();
 
   const handleClick = () => {
     router.push("/");
@@ -15,6 +15,7 @@ export default function Header() {
     if (document.cookie.includes("tempUser")) {
       document.cookie =
         "tempUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+      setLoggedInUser("");
       setLoggedIn(false);
       router.push("/");
       return;
@@ -30,6 +31,7 @@ export default function Header() {
       );
 
       if (response.ok) {
+        setLoggedInUser("");
         setLoggedIn(false);
         router.push("/");
       } else {
@@ -45,6 +47,7 @@ export default function Header() {
       <span className={styles.title} onClick={handleClick}>
         Your Vibe Today
       </span>
+      <p className={styles.username}>{loggedInUser}</p>
       <div className={styles.buttonContainer}>
         {loggedIn !== null &&
           (!loggedIn ? (

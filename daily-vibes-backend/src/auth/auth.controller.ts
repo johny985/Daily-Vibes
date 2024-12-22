@@ -21,7 +21,7 @@ export class AuthController {
       sameSite: 'lax',
     });
 
-    return { message: 'Login successful' };
+    return { message: 'Login successful', username: req.user.email };
   }
 
   @Post('logout')

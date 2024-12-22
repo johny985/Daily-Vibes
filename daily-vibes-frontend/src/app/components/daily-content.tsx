@@ -1,5 +1,5 @@
 import Modal from "./modal";
-import styles from "./dailyContent.module.css";
+import styles from "./daily-content.module.css";
 
 import { useState, useEffect } from "react";
 import {

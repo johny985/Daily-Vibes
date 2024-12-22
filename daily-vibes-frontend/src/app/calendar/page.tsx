@@ -6,7 +6,7 @@ import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
 import DailyContent from "../components/daily-content";
 import Modal from "../components/modal";
-import styles from "../components/dailyContent.module.css";
+import styles from "../components/daily-content.module.css";
 import calendarStyles from "./custom-calendar.module.css";
 import CalendarSkeleton from "../skeleton/calendar-skeleton";
 import useFetchDiary from "../hooks/useFetchDiary";
@@ -67,7 +67,6 @@ export default function Home() {
   const tileContent = useCallback(
     ({ date }: { date: Date }) => {
       if (dailyData?.length) {
-        debugger;
         for (let i = 0; i < dailyData.length; i++) {
           const calendarDate = date.toLocaleDateString();
           const contentDate = dailyData[i].contentDate;

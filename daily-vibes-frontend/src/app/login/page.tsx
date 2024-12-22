@@ -93,7 +93,7 @@ const PasswordField = function ({
 
 export default function LoginPage() {
   const router = useRouter();
-  const { setLoggedIn } = useUser();
+  const { setLoggedIn, setLoggedInUser } = useUser();
 
   const {
     register,
@@ -131,7 +131,14 @@ export default function LoginPage() {
         }
       );
 
-      if (!response.ok) {
+      if (response.ok) {
+        if (endpoint === "temp-user") {
+          setLoggedInUser("Temp User");
+        } else {
+          const { username } = await response.json();
+          setLoggedInUser(username);
+        }
+      } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to login");
       }

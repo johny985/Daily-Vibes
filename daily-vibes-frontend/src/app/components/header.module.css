@@ -40,3 +40,8 @@
 .logoutButton:hover {
   background-color: darkred;
 }
+
+.username {
+  font-weight: bold;
+  font-size: small;
+}
