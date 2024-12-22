@@ -27,6 +27,9 @@ export default function DailyContentList({
 
   return (
     <div className={styles.dailyContentList}>
+      {sortedDailyData.length === 0 && (
+        <p className={styles.noContent}>No content available</p>
+      )}
       {sortedDailyData.map((entry, index) => {
         if (!entry.content && !entry.vibe) return null;
 
