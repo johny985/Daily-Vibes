@@ -65,7 +65,7 @@ export default function Page() {
 
   return (
     <div>
-      <h1 className={styles.title}>Diary Statistic</h1>
+      <h1 className={styles.title}>Vibe Statistic</h1>
       <p>
         <label htmlFor="date" className={styles.label}>
           Date:

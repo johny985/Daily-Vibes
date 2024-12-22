@@ -45,7 +45,7 @@ export default function Header() {
   return (
     <header className={styles.header}>
       <span className={styles.title} onClick={handleClick}>
-        Your Vibe Today
+        Daily Vibes
       </span>
 
       <div className={styles.rightContainer}>
