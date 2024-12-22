@@ -1,4 +1,13 @@
-import { Controller, Request, Post, UseGuards, Response } from '@nestjs/common';
+import {
+  Controller,
+  Request,
+  Post,
+  UseGuards,
+  Response,
+  Get,
+  Req,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { AuthService } from './auth.service';
@@ -51,5 +60,14 @@ export class AuthController {
     });
 
     return res.status(200).json({ message: 'Login successful' });
+  }
+
+  @Get('verify')
+  verifyToken(@Req() request: any) {
+    const token = request.cookies.access_token;
+    if (!token) throw new UnauthorizedException('No token provided');
+
+    const decoded = this.authService.verifyToken(token);
+    return { message: 'Token verified', username: decoded?.email };
   }
 }

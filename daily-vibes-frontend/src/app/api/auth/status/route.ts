@@ -1,12 +1,41 @@
 import { NextResponse } from "next/server";
 
 export async function GET(request: any) {
-  const accessToken = request.cookies.get("access_token")?.value;
-  const tempUser = request.cookies.get("tempUser")?.value;
+  const tempUser = request.cookies?.get("tempUser")?.value;
 
-  if (!accessToken && !tempUser) {
-    return NextResponse.json({ loggedIn: false }, { status: 200 });
+  if (tempUser) {
+    return NextResponse.json(
+      { loggedIn: true, user: "Temp User" },
+      { status: 200 }
+    );
   }
 
-  return NextResponse.json({ loggedIn: true }, { status: 200 });
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/auth/verify`,
+      {
+        method: "GET",
+        headers: {
+          Cookie: request.headers.get("cookie") || "",
+        },
+      }
+    );
+
+    if (response.ok) {
+      const data = await response.json();
+
+      return NextResponse.json(
+        { loggedIn: true, user: data.username },
+        { status: 200 }
+      );
+    } else {
+      return NextResponse.json(
+        { loggedIn: false, user: null },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    console.error("Error verifying token with NestJS:", error);
+    return NextResponse.json({ loggedIn: false, user: null }, { status: 500 });
+  }
 }

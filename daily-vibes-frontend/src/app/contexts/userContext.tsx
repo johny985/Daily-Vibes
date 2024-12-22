@@ -29,6 +29,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         });
 
         const data = await response.json();
+
+        setLoggedInUser(data.user);
         setLoggedIn(data.loggedIn);
       } catch (error) {
         console.error("Error checking login status:", error);

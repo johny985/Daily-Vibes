@@ -47,24 +47,30 @@ export default function Header() {
       <span className={styles.title} onClick={handleClick}>
         Your Vibe Today
       </span>
-      <p className={styles.username}>{loggedInUser}</p>
-      <div className={styles.buttonContainer}>
-        {loggedIn !== null &&
-          (!loggedIn ? (
-            <button
-              onClick={() => router.push("/login")}
-              className={`${styles.button} ${styles.loginButton}`}
-            >
-              Login
-            </button>
-          ) : (
-            <button
-              onClick={handleLogout}
-              className={`${styles.button} ${styles.logoutButton}`}
-            >
-              Logout
-            </button>
-          ))}
+
+      <div className={styles.rightContainer}>
+        {loggedIn !== null && (
+          <>
+            {loggedIn && <p className={styles.username}>{loggedInUser}</p>}
+            <div className={styles.buttonContainer}>
+              {!loggedIn ? (
+                <button
+                  onClick={() => router.push("/login")}
+                  className={`${styles.button} ${styles.loginButton}`}
+                >
+                  Login
+                </button>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className={`${styles.button} ${styles.logoutButton}`}
+                >
+                  Logout
+                </button>
+              )}
+            </div>
+          </>
+        )}
       </div>
     </header>
   );

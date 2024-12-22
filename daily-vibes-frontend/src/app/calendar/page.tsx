@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import dynamic from "next/dynamic";
 import "react-calendar/dist/Calendar.css";
 import "./calendar.css";
@@ -103,13 +103,11 @@ export default function Home() {
   };
 
   const goToCurrentMonth = async () => {
-    if (!document.cookie.includes("tempUser")) {
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth() + 1;
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth() + 1;
 
-      await fetchDiaryContent(year, month);
-    }
+    await fetchDiaryContent(year, month);
 
     setActiveStartDate(new Date());
   };

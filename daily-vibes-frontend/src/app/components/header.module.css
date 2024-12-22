@@ -11,9 +11,15 @@
   cursor: pointer;
 }
 
+.rightContainer {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .buttonContainer {
   display: flex;
-  gap: 1rem; /* Spacing between buttons */
+  gap: 0.5rem;
 }
 
 .button {
@@ -23,6 +29,7 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  font-size: 1rem;
 }
 
 .loginButton {
@@ -43,5 +50,6 @@
 
 .username {
   font-weight: bold;
-  font-size: small;
+  font-size: 0.8rem;
+  margin: 0;
 }
