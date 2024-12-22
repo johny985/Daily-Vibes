@@ -117,17 +117,17 @@ export default function Diary() {
   };
 
   return (
-    <div className={styles.diary}>
-      <h1 className={styles.title}>Daily Diary</h1>
+    <div>
+      <h1 className={styles.title}>Diary</h1>
       <div className={styles.header}>
-        <p className={styles.date}>
-          <label>
+        <p>
+          <label htmlFor="date" className={styles.label}>
             Date:
             <input
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className={styles.datePicker}
+              className={styles.dateInput}
             />
           </label>
         </p>

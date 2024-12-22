@@ -37,8 +37,7 @@ export default function Page() {
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
 
-    // Ensure month is two digits
-    return `${currentYear}-${currentMonth.toString().padStart(2, "0")}`;
+    return `${currentYear}-${currentMonth}`;
   });
 
   const [chartData, setChartData] = useState<ChartData[]>([]);
@@ -70,9 +69,9 @@ export default function Page() {
   };
 
   return (
-    <div className={styles.container}>
-      <h1 className={styles.heading}>Diary Entries</h1>
-      <p className={styles.dateParagraph}>
+    <div>
+      <h1 className={styles.title}>Diary Statistic</h1>
+      <p>
         <label htmlFor="date" className={styles.label}>
           Date:
           <input
@@ -84,7 +83,6 @@ export default function Page() {
           />
         </label>
       </p>
-
       {isLoading && <ChartSkeleton />}
 
       {!isLoading && dailyData.length === 0 && (

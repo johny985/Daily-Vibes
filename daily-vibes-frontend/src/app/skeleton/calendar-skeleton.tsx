@@ -14,7 +14,7 @@ export default function CalendarSkeleton() {
         ))}
       </div>
       <div className={styles.monthView}>
-        {[...Array(6)].map((_, weekIndex) => (
+        {[...Array(5)].map((_, weekIndex) => (
           <div key={weekIndex} className={styles.week}>
             {[...Array(7)].map((_, dayIndex) => (
               <div key={dayIndex} className={styles.tile}></div>

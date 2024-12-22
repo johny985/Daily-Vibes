@@ -73,3 +73,12 @@
   background-color: #f3f3f3;
   color: #a1a1a1;
 }
+
+.label {
+  font-weight: bold;
+}
+
+.dateInput {
+  margin-left: 10px;
+  padding: 5px;
+}
