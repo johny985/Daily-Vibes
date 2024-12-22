@@ -201,7 +201,6 @@ export default function DailyContent({
         </div>
       </Modal>
 
-      {/** Confirming to close the modal */}
       {isConfirmationModalOpen && (
         <Modal onClose={onClose}>
           <div className={styles.confirmation}>
