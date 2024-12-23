@@ -1,4 +1,3 @@
-// useFetchDiary.ts
 import { Diary } from "@/types";
 import { useEffect, useState } from "react";
 

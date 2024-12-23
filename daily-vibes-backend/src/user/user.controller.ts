@@ -5,10 +5,12 @@ import {
   UseInterceptors,
   Get,
   Query,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { TransactionInterceptor } from 'src/common/interceptors/transaction.interceptor';
+import { QueryRunner } from 'typeorm';
 
 @Controller('user')
 export class UserController {
@@ -16,8 +18,9 @@ export class UserController {
 
   @Post()
   @UseInterceptors(TransactionInterceptor)
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
+  create(@Body() createUserDto: CreateUserDto, @Req() req) {
+    const qr: QueryRunner = req.queryRunner;
+    return this.userService.create(createUserDto, qr);
   }
 
   @Get('findUser')

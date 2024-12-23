@@ -1,4 +1,3 @@
-// ChartSkeleton.tsx
 import React from "react";
 import styles from "./chart-skeleton.module.css";
 

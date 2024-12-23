@@ -6,14 +6,15 @@ import {
   Delete,
   Query,
   UseInterceptors,
-  Request,
   ClassSerializerInterceptor,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { DiaryService } from './diary.service';
 import { CreateDiaryDto } from './dto/create-diary.dto';
 import { TransactionInterceptor } from 'src/common/interceptors/transaction.interceptor';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { QueryRunner } from 'typeorm';
 
 @Controller('diary')
 @UseInterceptors(ClassSerializerInterceptor)
@@ -23,15 +24,16 @@ export class DiaryController {
 
   @Post()
   @UseInterceptors(TransactionInterceptor)
-  create(@Body() createDiaryDto: CreateDiaryDto, @Request() req) {
+  async create(@Body() createDiaryDto: CreateDiaryDto, @Req() req) {
     const userId = req?.user?.userId;
+    const qr: QueryRunner = req.queryRunner;
 
-    return this.diaryService.save(createDiaryDto, userId);
+    return this.diaryService.save(createDiaryDto, userId, qr);
   }
 
   @Get()
   async find(
-    @Request() req,
+    @Req() req,
     @Query('date') date?: string,
     @Query('year') year?: string,
     @Query('month') month?: string,
@@ -46,7 +48,7 @@ export class DiaryController {
   }
 
   @Delete()
-  remove(@Query('date') date: string, @Request() req) {
+  remove(@Query('date') date: string, @Req() req) {
     const userId = req.user.userId;
 
     return this.diaryService.remove(date, userId);

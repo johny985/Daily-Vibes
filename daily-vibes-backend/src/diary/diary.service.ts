@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateDiaryDto } from './dto/create-diary.dto';
-import { Like, Repository } from 'typeorm';
+import { Like, QueryRunner, Repository } from 'typeorm';
 import { Diary } from './entities/diary.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/user/entities/user.entity';
@@ -20,8 +20,8 @@ export class DiaryService {
   private readonly limit = 30;
   private readonly ttl = 60 * 1000;
 
-  async save(createDiaryDto: CreateDiaryDto, userId: number) {
-    const user = await this.userRepository.findOne({
+  async save(createDiaryDto: CreateDiaryDto, userId: number, qr: QueryRunner) {
+    const user = await qr.manager.findOne(User, {
       where: { id: userId },
     });
 
@@ -29,7 +29,7 @@ export class DiaryService {
       throw new NotFoundException('User not found');
     }
 
-    const existingDiary = await this.diaryRepository.findOne({
+    const existingDiary = await qr.manager.findOne(Diary, {
       where: {
         user: { id: userId },
         contentDate: createDiaryDto.contentDate,
@@ -42,7 +42,7 @@ export class DiaryService {
       existingDiary.content = createDiaryDto.content;
       existingDiary.vibe = vibe;
 
-      return await this.diaryRepository.save(existingDiary);
+      return await qr.manager.save(existingDiary);
     }
 
     const newDiary = this.diaryRepository.create({
@@ -51,7 +51,7 @@ export class DiaryService {
       user,
     });
 
-    return await this.diaryRepository.save(newDiary);
+    return await qr.manager.save(newDiary);
   }
 
   private throttleRequest(userId: string): void {

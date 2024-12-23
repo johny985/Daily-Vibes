@@ -4,7 +4,8 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { catchError, Observable, tap } from 'rxjs';
+import { catchError, from, Observable, tap, throwError } from 'rxjs';
+import { finalize, mergeMap } from 'rxjs/operators';
 import { DataSource } from 'typeorm';
 
 @Injectable()
@@ -24,15 +25,16 @@ export class TransactionInterceptor implements NestInterceptor {
     req.queryRunner = qr;
 
     return next.handle().pipe(
-      catchError(async (e) => {
-        await qr.rollbackTransaction();
-        await qr.release();
-
-        throw e;
+      tap(() => {
+        return qr.commitTransaction();
       }),
-      tap(async () => {
-        await qr.commitTransaction();
-        await qr.release();
+      catchError((error) => {
+        return from(qr.rollbackTransaction()).pipe(
+          mergeMap(() => throwError(() => error)),
+        );
+      }),
+      finalize(() => {
+        return qr.release();
       }),
     );
   }

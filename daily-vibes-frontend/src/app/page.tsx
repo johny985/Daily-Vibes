@@ -137,7 +137,7 @@ export default function Diary() {
       </div>
       <textarea
         className={`${styles.content} ${!editable ? styles.disabled : ""}`}
-        placeholder="Write your thoughts here..."
+        placeholder="Write your thoughts or vibes for today..."
         onChange={(e) => {
           setDiary(e.target.value);
         }}

@@ -14,7 +14,7 @@ import {
   Cell,
 } from "recharts";
 import ChartSkeleton from "../skeleton/chart-skeleton";
-import styles from "./vibe-statistic.module.css"; // Updated import for CSS module
+import styles from "./vibe-statistic.module.css";
 import { ChartData } from "@/types";
 
 const vibeDetails: Record<string, { label: string; color: string }> = {
