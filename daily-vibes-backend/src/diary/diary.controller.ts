@@ -28,7 +28,7 @@ export class DiaryController {
     const userId = req?.user?.userId;
     const qr: QueryRunner = req.queryRunner;
 
-    return this.diaryService.save(createDiaryDto, userId, qr);
+    return await this.diaryService.save(createDiaryDto, userId, qr);
   }
 
   @Get()

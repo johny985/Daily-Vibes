@@ -4,37 +4,41 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
-import { catchError, from, Observable, tap, throwError } from 'rxjs';
-import { finalize, mergeMap } from 'rxjs/operators';
-import { DataSource } from 'typeorm';
+import { Observable, from, throwError } from 'rxjs';
+import { catchError, finalize, mergeMap } from 'rxjs/operators';
+import { DataSource, QueryRunner } from 'typeorm';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
   constructor(private readonly dataSource: DataSource) {}
 
-  async intercept(
+  intercept(
     context: ExecutionContext,
     next: CallHandler<any>,
-  ): Promise<Observable<any>> {
+  ): Observable<any> {
     const req = context.switchToHttp().getRequest();
-    const qr = this.dataSource.createQueryRunner();
+    const qr: QueryRunner = this.dataSource.createQueryRunner();
 
-    await qr.connect();
-    await qr.startTransaction();
-
-    req.queryRunner = qr;
-
-    return next.handle().pipe(
-      tap(() => {
-        return qr.commitTransaction();
+    return from(qr.connect()).pipe(
+      mergeMap(() => from(qr.startTransaction())),
+      mergeMap(() => {
+        req.queryRunner = qr;
+        return next.handle();
       }),
-      catchError((error) => {
-        return from(qr.rollbackTransaction()).pipe(
-          mergeMap(() => throwError(() => error)),
-        );
+      mergeMap(async (result) => {
+        await qr.commitTransaction();
+        return result;
+      }),
+      catchError(async (error) => {
+        try {
+          await qr.rollbackTransaction();
+        } catch (rollbackError) {
+          console.error('Rollback failed:', rollbackError);
+        }
+        return throwError(() => error);
       }),
       finalize(() => {
-        return qr.release();
+        qr.release();
       }),
     );
   }
