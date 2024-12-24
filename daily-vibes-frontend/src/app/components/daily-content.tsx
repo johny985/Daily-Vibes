@@ -21,6 +21,7 @@ export default function DailyContent({
   setHasEdited?: (hasEdited: boolean) => void;
 }) {
   const formattedDate = date.toLocaleDateString();
+  const [isLoading, setLoading] = useState(false);
   const [editable, setEditable] = useState(true);
   const [diary, setDiary] = useState("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
@@ -82,6 +83,8 @@ export default function DailyContent({
       return;
     }
 
+    setLoading(true);
+
     if (document.cookie.includes("tempUser")) {
       const newMood = {
         content: diary,
@@ -125,9 +128,12 @@ export default function DailyContent({
         }
       } catch (error) {
         toast.error("Failed to save diary content. Please try again.");
+      } finally {
+        setLoading(false);
       }
     }
 
+    setLoading(false);
     onClose(true);
     toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
@@ -187,7 +193,7 @@ export default function DailyContent({
           />
           <div className={styles.buttonGroup}>
             <button className={styles.saveButton} onClick={handleDiaryUpdate}>
-              {editable ? "Save" : "Edit"}
+              {isLoading ? "Saving..." : editable ? "Save" : "Edit"}
             </button>
             {hasInitialContent && (
               <button

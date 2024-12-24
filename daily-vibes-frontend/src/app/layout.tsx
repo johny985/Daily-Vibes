@@ -22,7 +22,7 @@ export default function RootLayout({
               <div className={style.sidebar}>{sidebar}</div>
               <div className={style.content}>{children}</div>
             </main>
-            <footer>RORORO</footer>
+            <footer>@JooHyung</footer>
           </div>
           <ToastContainer
             position="bottom-center"

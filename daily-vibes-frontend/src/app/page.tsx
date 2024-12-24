@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 
 export default function Diary() {
+  const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(() => {
     const todayString = new Date().toLocaleDateString();
 
@@ -76,6 +77,8 @@ export default function Diary() {
       setEditable(true);
       return;
     }
+    debugger;
+    setLoading(true);
 
     if (document.cookie.includes("tempUser")) {
       await saveLocalDiaryEntry({
@@ -110,9 +113,12 @@ export default function Diary() {
         }
       } catch (error) {
         toast.error("Failed to save diary content. Please try again.");
+      } finally {
+        setLoading(false);
       }
     }
 
+    setLoading(false);
     toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
 
@@ -131,8 +137,12 @@ export default function Diary() {
             />
           </label>
         </p>
-        <button className={styles.saveButton} onClick={handleDiaryUpdate}>
-          {editable ? "Save" : "Edit"}
+        <button
+          className={styles.saveButton}
+          onClick={handleDiaryUpdate}
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving..." : editable ? "Save" : "Edit"}
         </button>
       </div>
       <textarea
