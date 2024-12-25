@@ -77,7 +77,12 @@ export default function Diary() {
       setEditable(true);
       return;
     }
-    debugger;
+
+    if (!diary.length) {
+      toast.error("Please type in somthing to save.");
+      return;
+    }
+
     setLoading(true);
 
     if (document.cookie.includes("tempUser")) {
