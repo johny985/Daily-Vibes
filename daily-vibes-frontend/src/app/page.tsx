@@ -127,6 +127,15 @@ export default function Diary() {
     toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
 
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+
+    return `${year}-${month}-${day}`;
+  };
+
   return (
     <div>
       <h1 className={styles.title}>Diary</h1>
@@ -139,6 +148,8 @@ export default function Diary() {
               value={date}
               onChange={(e) => setDate(e.target.value)}
               className={styles.dateInput}
+              min="1980-01-01"
+              max={getTodayDate()}
             />
           </label>
         </p>
