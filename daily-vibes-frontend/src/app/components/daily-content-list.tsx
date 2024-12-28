@@ -21,7 +21,7 @@ export default function DailyContentList({
       const dateA = parseDate(a.contentDate);
       const dateB = parseDate(b.contentDate);
 
-      return dateA.getTime() - dateB.getTime();
+      return dateB.getTime() - dateA.getTime();
     });
   }, [dailyData]);
 
