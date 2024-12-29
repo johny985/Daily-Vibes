@@ -6,7 +6,8 @@ import * as cookieParser from 'cookie-parser';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  const frontendURL = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const frontendURL =
+    process.env.FRONTEND_URL || 'https://daily-vibes.vercel.app';
 
   app.enableCors({
     origin: frontendURL,
