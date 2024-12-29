@@ -27,7 +27,7 @@ export class AuthController {
       httpOnly: false,
       secure: false,
       path: '/',
-      sameSite: 'lax',
+      sameSite: 'none',
     });
 
     return { message: 'Login successful', username: req.user.email };
