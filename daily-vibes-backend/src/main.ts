@@ -9,7 +9,7 @@ async function bootstrap() {
   const frontendURL = 'https://daily-vibes.vercel.app';
 
   app.enableCors({
-    origin: frontendURL,
+    origin: true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
