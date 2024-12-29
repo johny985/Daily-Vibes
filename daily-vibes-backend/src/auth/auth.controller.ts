@@ -25,7 +25,7 @@ export class AuthController {
     //TODO: Set secure to true in production, httpOnly to true in production
     res.cookie('access_token', access_token, {
       httpOnly: false,
-      secure: false,
+      secure: true,
       path: '/',
       sameSite: 'none',
     });
