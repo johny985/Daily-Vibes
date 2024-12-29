@@ -99,7 +99,7 @@ export default function Page() {
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
-              <YAxis allowDecimals={false} />
+              <YAxis allowDecimals={false} domain={[0, 31]} />
               <Tooltip />
               <Legend />
               <Bar dataKey="count" name="Vibe Count">
