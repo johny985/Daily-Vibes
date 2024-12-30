@@ -23,14 +23,18 @@ export class AuthController {
     console.log('Access Token:', access_token);
 
     //TODO: Set secure to true in production, httpOnly to true in production
-    res.cookie('access_token', access_token, {
-      httpOnly: false,
-      secure: true,
-      path: '/',
-      sameSite: 'none',
-    });
+    // res.cookie('access_token', access_token, {
+    //   httpOnly: false,
+    //   secure: true,
+    //   path: '/',
+    //   sameSite: 'none',
+    // });
 
-    return { message: 'Login successful', username: req.user.email };
+    return {
+      message: 'Login successful',
+      username: req.user.email,
+      access_token: access_token,
+    };
   }
 
   @Post('logout')
@@ -46,18 +50,17 @@ export class AuthController {
     return { message: 'Logged out successfully' };
   }
 
-  //TODO: Fix the name, cookie expiracy time
   @Post('temp-user')
   async setTempUser(@Request() req, @Response() res) {
-    const tempUser = true;
+    // const tempUser = true;
 
-    res.cookie('tempUser', tempUser, {
-      httpOnly: false,
-      secure: false,
-      path: '/',
-      sameSite: 'lax',
-      // maxAge: 1000 * 4,
-    });
+    // res.cookie('tempUser', tempUser, {
+    //   httpOnly: false,
+    //   secure: false,
+    //   path: '/',
+    //   sameSite: 'lax',
+    //   // maxAge: 1000 * 4,
+    // });
 
     return res.status(200).json({ message: 'Login successful' });
   }

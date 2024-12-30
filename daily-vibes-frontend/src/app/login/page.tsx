@@ -129,9 +129,11 @@ export default function LoginPage() {
 
       if (response.ok) {
         if (endpoint === "temp-user") {
+          document.cookie = `tempUser=true; Path=/; Secure; SameSite=None;`;
           setLoggedInUser("Temp User");
         } else {
-          const { username } = await response.json();
+          const { username, access_token } = await response.json();
+          document.cookie = `access_token=${access_token}; Path=/; Secure; SameSite=None;`;
           setLoggedInUser(username);
         }
       } else {
