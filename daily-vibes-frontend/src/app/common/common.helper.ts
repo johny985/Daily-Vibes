@@ -9,6 +9,7 @@ export function fetchLocalDiaryOnDate(date: string) {
 }
 
 export async function saveLocalDiaryEntry(entry: any) {
+  debugger;
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/diary/vibe`,
     {
@@ -16,7 +17,7 @@ export async function saveLocalDiaryEntry(entry: any) {
       headers: {
         "Content-Type": "application/json",
       },
-
+      credentials: "include",
       body: JSON.stringify({ content: entry.content }),
     }
   );
