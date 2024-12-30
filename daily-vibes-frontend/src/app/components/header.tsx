@@ -13,6 +13,13 @@ export default function Header() {
 
   const handleLogout = async () => {
     if (document.cookie.includes("tempUser")) {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
+        {
+          method: "POST",
+        }
+      );
+
       document.cookie =
         "tempUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       setLoggedInUser("");

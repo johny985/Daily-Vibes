@@ -43,6 +43,10 @@ export class AuthController {
       req.logout();
     }
 
+    res.clearCookie('tempUser', {
+      path: '/',
+    });
+
     res.clearCookie('access_token', {
       path: '/',
     });
