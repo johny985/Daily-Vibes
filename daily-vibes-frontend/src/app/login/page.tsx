@@ -26,6 +26,7 @@ const EmailField = function ({
       <input
         type="email"
         id="email"
+        autoComplete="email"
         {...register("email", {
           required: "Email is required",
           pattern: {
@@ -65,6 +66,7 @@ const PasswordField = function ({
       <input
         type="password"
         id="password"
+        autoComplete="current-password"
         {...register("password", {
           required: "Password is required",
           minLength: {

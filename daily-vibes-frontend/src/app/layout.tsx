@@ -5,6 +5,11 @@ import { UserProvider } from "./contexts/userContext";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+export const metadata = {
+  title: "Daily Vibes",
+  description: "Daily Vibes",
+};
+
 export default function RootLayout({
   children,
   sidebar,

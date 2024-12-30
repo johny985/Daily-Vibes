@@ -12,14 +12,21 @@ export default function Header() {
   };
 
   const handleLogout = async () => {
-    if (document.cookie.includes("tempUser")) {
-      document.cookie =
-        "tempUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+    const removeCookie = (cookieName: string) => {
+      document.cookie = `${cookieName}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+    };
+
+    const cleanup = () => {
       setLoggedInUser("");
       setLoggedIn(false);
+      localStorage.removeItem("access_token");
       router.push("/");
       router.refresh();
-      localStorage.removeItem("access_token");
+    };
+
+    if (document.cookie.includes("tempUser")) {
+      removeCookie("tempUser");
+      cleanup();
       return;
     }
 
@@ -28,21 +35,13 @@ export default function Header() {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         }
       );
 
       if (response.ok) {
-        document.cookie =
-          "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-
-        setLoggedInUser("");
-        setLoggedIn(false);
-        router.push("/");
-        router.refresh();
-        localStorage.removeItem("access_token");
+        removeCookie("access_token");
+        cleanup();
       } else {
         console.error("Logout failed");
       }

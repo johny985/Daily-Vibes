@@ -203,7 +203,11 @@ export default function DailyContent({
             disabled={!editable}
           />
           <div className={styles.buttonGroup}>
-            <button className={styles.saveButton} onClick={handleDiaryUpdate}>
+            <button
+              className={styles.saveButton}
+              onClick={handleDiaryUpdate}
+              disabled={isLoading}
+            >
               {isLoading ? "Saving..." : editable ? "Save" : "Edit"}
             </button>
             {hasInitialContent && (
