@@ -119,7 +119,6 @@ export default function LoginPage() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({
             username: credentials.email,
             password: credentials.password,
@@ -128,12 +127,14 @@ export default function LoginPage() {
       );
 
       if (response.ok) {
+        const { access_token } = await response.json();
         if (endpoint === "temp-user") {
+          localStorage.setItem("access_token", access_token);
           document.cookie = `tempUser=true; Path=/; Secure; SameSite=None;`;
           setLoggedInUser("Temp User");
         } else {
           const { username, access_token } = await response.json();
-          document.cookie = `access_token=${access_token}; Path=/; Secure; SameSite=None;`;
+          // document.cookie = `access_token=${access_token}; Path=/; Secure; SameSite=None;`;
           setLoggedInUser(username);
         }
       } else {

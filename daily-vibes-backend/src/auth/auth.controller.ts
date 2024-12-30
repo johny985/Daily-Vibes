@@ -52,6 +52,10 @@ export class AuthController {
 
   @Post('temp-user')
   async setTempUser(@Request() req, @Response() res) {
+    const { access_token } = await this.authService.login({
+      email: 'tempUser',
+      id: 999,
+    });
     // const tempUser = true;
 
     // res.cookie('tempUser', tempUser, {
@@ -62,7 +66,7 @@ export class AuthController {
     //   // maxAge: 1000 * 4,
     // });
 
-    return res.status(200).json({ message: 'Login successful' });
+    return res.status(200).json({ message: 'Login successful', access_token });
   }
 
   @Get('verify')
