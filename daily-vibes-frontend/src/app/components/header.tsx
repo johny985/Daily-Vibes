@@ -18,6 +18,11 @@ export default function Header() {
       setLoggedInUser("");
       setLoggedIn(false);
       router.push("/");
+
+      setTimeout(() => {
+        console.log("Updated cookies:", document.cookie); // Debug if needed
+      }, 0);
+
       return;
     }
 
