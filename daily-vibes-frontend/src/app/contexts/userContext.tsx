@@ -25,7 +25,6 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       try {
         const response = await fetch("/api/auth/status", {
           method: "GET",
-          ,
         });
 
         const data = await response.json();
