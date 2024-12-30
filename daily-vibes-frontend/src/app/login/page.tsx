@@ -127,16 +127,16 @@ export default function LoginPage() {
       );
 
       if (response.ok) {
-        const { access_token } = await response.json();
+        const { username, access_token } = await response.json();
         if (endpoint === "temp-user") {
-          localStorage.setItem("access_token", access_token);
           document.cookie = `tempUser=true; Path=/; Secure; SameSite=None;`;
           setLoggedInUser("Temp User");
         } else {
-          const { username, access_token } = await response.json();
-          // document.cookie = `access_token=${access_token}; Path=/; Secure; SameSite=None;`;
+          document.cookie = `access_token=${access_token}; Path=/; Secure; SameSite=None;`;
           setLoggedInUser(username);
         }
+
+        localStorage.setItem("access_token", access_token);
       } else {
         const errorData = await response.json();
         throw new Error(errorData.message || "Failed to login");

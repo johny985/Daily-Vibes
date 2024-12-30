@@ -43,9 +43,15 @@ export default function Diary() {
 
       try {
         //TODO: Apply appropriate cache
+        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
-          { credentials: "include" }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (response.ok) {
@@ -94,14 +100,15 @@ export default function Diary() {
       setEditable(false);
     } else {
       try {
+        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary`,
           {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
-            credentials: "include",
             body: JSON.stringify({
               content: diary,
               contentDate: formattedDate,

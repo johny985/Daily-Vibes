@@ -26,10 +26,14 @@ export default function useFetchDiary() {
     }
 
     try {
+      const token = localStorage.getItem("access_token");
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/diary?year=${year}&month=${month}`,
         {
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 

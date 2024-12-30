@@ -33,7 +33,7 @@ export class AuthController {
     return {
       message: 'Login successful',
       username: req.user.email,
-      access_token: access_token,
+      access_token,
     };
   }
 
@@ -43,9 +43,13 @@ export class AuthController {
       req.logout();
     }
 
-    res.clearCookie('access_token', {
-      path: '/',
-    });
+    // res.clearCookie('access_token', {
+    //   path: '/',
+    // });
+
+    // res.clearCookie('tempUser', {
+    //   path: '/',
+    // });
 
     return { message: 'Logged out successfully' };
   }

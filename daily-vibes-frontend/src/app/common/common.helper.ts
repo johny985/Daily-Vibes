@@ -10,7 +10,7 @@ export function fetchLocalDiaryOnDate(date: string) {
 
 export async function saveLocalDiaryEntry(entry: any) {
   const token = localStorage.getItem("access_token");
-  debugger;
+
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_URL}/diary/vibe`,
     {

@@ -18,6 +18,8 @@ export default function Header() {
       setLoggedInUser("");
       setLoggedIn(false);
       router.push("/");
+      router.refresh();
+      localStorage.removeItem("access_token");
       return;
     }
 
@@ -26,14 +28,21 @@ export default function Header() {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         {
           method: "POST",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
       if (response.ok) {
+        document.cookie =
+          "access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
         setLoggedInUser("");
         setLoggedIn(false);
         router.push("/");
+        router.refresh();
+        localStorage.removeItem("access_token");
       } else {
         console.error("Logout failed");
       }

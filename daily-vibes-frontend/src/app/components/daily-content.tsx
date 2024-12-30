@@ -45,9 +45,15 @@ export default function DailyContent({
 
       try {
         //TODO: Apply appropriate cache
+        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
-          { credentials: "include" }
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
         );
 
         if (response.ok) {
@@ -98,13 +104,14 @@ export default function DailyContent({
       onSave({ ...newMood, vibe });
     } else {
       try {
+        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary`,
           {
             method: "POST",
-            credentials: "include",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
             body: JSON.stringify({
               content: diary,
@@ -151,11 +158,15 @@ export default function DailyContent({
     }
 
     try {
+      const token = localStorage.getItem("access_token");
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
         {
           method: "DELETE",
-          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
