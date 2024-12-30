@@ -21,7 +21,7 @@ const Calendar = dynamic(() => import("react-calendar"), {
 export default function Home() {
   const { dailyData, setDailyData, fetchDiaryContent } = useFetchDiary();
 
-  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hasEdited, setHasEdited] = useState(false);
   const [showCloseConfirmation, setShowCloseConfirmation] = useState(false);
@@ -40,7 +40,15 @@ export default function Home() {
   };
 
   const handleDayClick = (value: Date) => {
-    setSelectedDate(value);
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const day = String(value.getDate()).padStart(2, "0");
+
+    const formattedDate = `${month}/${day}/${year}`;
+
+    console.log(formattedDate);
+
+    setSelectedDate(formattedDate);
     setIsModalOpen(true);
   };
 
@@ -169,7 +177,7 @@ export default function Home() {
 
       {isModalOpen && (
         <DailyContent
-          date={selectedDate as Date}
+          date={selectedDate as string}
           onClose={closeModal}
           onSave={updateDailyData}
           setHasEdited={setHasEdited}

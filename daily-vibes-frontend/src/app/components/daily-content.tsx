@@ -15,12 +15,12 @@ export default function DailyContent({
   onSave,
   setHasEdited,
 }: {
-  date: Date;
+  date: string;
   onClose: (isSaving?: boolean) => void;
   onSave: (newMood: any) => void;
   setHasEdited?: (hasEdited: boolean) => void;
 }) {
-  const formattedDate = date.toLocaleDateString();
+  const formattedDate = date;
   const [isLoading, setLoading] = useState(false);
   const [editable, setEditable] = useState(true);
   const [diary, setDiary] = useState("");
@@ -189,9 +189,7 @@ export default function DailyContent({
             ×
           </button>
           <h1 className={styles.title}>Daily Vibes</h1>
-          <p className={styles.date}>
-            {`Date: ${date?.toLocaleDateString() || "No date selected"}`}
-          </p>
+          <p className={styles.date}>{`Date: ${date || "No date selected"}`}</p>
           <textarea
             className={`${styles.content} ${!editable ? styles.disabled : ""}`}
             placeholder="Write your thoughts or vibes for today..."
