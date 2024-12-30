@@ -46,8 +46,7 @@ export default function DailyContent({
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
-          { credentials: "include" }
+          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`
         );
 
         if (response.ok) {
@@ -102,7 +101,7 @@ export default function DailyContent({
           `${process.env.NEXT_PUBLIC_API_URL}/diary`,
           {
             method: "POST",
-            credentials: "include",
+
             headers: {
               "Content-Type": "application/json",
             },
@@ -155,7 +154,6 @@ export default function DailyContent({
         `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
         {
           method: "DELETE",
-          credentials: "include",
         }
       );
 

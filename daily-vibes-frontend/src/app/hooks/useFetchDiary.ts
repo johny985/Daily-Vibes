@@ -27,10 +27,7 @@ export default function useFetchDiary() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diary?year=${year}&month=${month}`,
-        {
-          credentials: "include",
-        }
+        `${process.env.NEXT_PUBLIC_API_URL}/diary?year=${year}&month=${month}`
       );
 
       if (response.ok) {

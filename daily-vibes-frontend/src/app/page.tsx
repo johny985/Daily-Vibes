@@ -44,8 +44,7 @@ export default function Diary() {
       try {
         //TODO: Apply appropriate cache
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
-          { credentials: "include" }
+          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`
         );
 
         if (response.ok) {
@@ -101,7 +100,7 @@ export default function Diary() {
             headers: {
               "Content-Type": "application/json",
             },
-            credentials: "include",
+
             body: JSON.stringify({
               content: diary,
               contentDate: formattedDate,

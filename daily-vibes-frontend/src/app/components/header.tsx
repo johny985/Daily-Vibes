@@ -26,7 +26,6 @@ export default function Header() {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         {
           method: "POST",
-          credentials: "include",
         }
       );
 

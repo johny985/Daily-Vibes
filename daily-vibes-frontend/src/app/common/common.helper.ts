@@ -16,7 +16,7 @@ export async function saveLocalDiaryEntry(entry: any) {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include",
+
       body: JSON.stringify({ content: entry.content }),
     }
   );
