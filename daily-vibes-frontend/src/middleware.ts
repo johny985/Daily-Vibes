@@ -6,6 +6,8 @@ export function middleware(request: NextRequest) {
   const tempUser = request.cookies.get("tempUser")?.value;
 
   if (!token && !tempUser && request.nextUrl.pathname !== "/login") {
+    console.log("Middleware redirecting to login - no token/tempUser detected");
+
     const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }

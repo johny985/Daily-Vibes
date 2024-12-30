@@ -17,6 +17,7 @@ export default function Header() {
         `${process.env.NEXT_PUBLIC_API_URL}/auth/logout`,
         {
           method: "POST",
+          credentials: "include",
         }
       );
 
@@ -24,7 +25,8 @@ export default function Header() {
         "tempUser=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
       setLoggedInUser("");
       setLoggedIn(false);
-      router.push("/");
+      router.push("/login");
+      router.refresh();
 
       setTimeout(() => {
         console.log("Updated cookies:", document.cookie); // Debug if needed
