@@ -20,17 +20,17 @@ export default function DailyContent({
   onSave: (newMood: any) => void;
   setHasEdited?: (hasEdited: boolean) => void;
 }) {
-  const formattedDate = date;
   const [isLoading, setLoading] = useState(false);
   const [editable, setEditable] = useState(true);
   const [diary, setDiary] = useState("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [hasInitialContent, setHasInitialContent] = useState(false);
+  const token = localStorage.getItem("access_token");
 
   useEffect(() => {
     const fetchDiaryContent = async () => {
       if (document.cookie.includes("tempUser")) {
-        const diaryEntry = fetchLocalDiaryOnDate(formattedDate);
+        const diaryEntry = fetchLocalDiaryOnDate(date);
 
         if (diaryEntry) {
           setDiary(diaryEntry.content);
@@ -45,9 +45,8 @@ export default function DailyContent({
 
       try {
         //TODO: Apply appropriate cache
-        const token = localStorage.getItem("access_token");
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${date}`,
           {
             headers: {
               "Content-Type": "application/json",
@@ -76,7 +75,7 @@ export default function DailyContent({
     };
 
     fetchDiaryContent();
-  }, [formattedDate]);
+  }, [date]);
 
   const handleDiaryUpdate = async () => {
     if (!diary) {
@@ -94,7 +93,7 @@ export default function DailyContent({
     if (document.cookie.includes("tempUser")) {
       const newMood = {
         content: diary,
-        contentDate: formattedDate,
+        contentDate: date,
       };
 
       const vibe = await saveLocalDiaryEntry({
@@ -104,7 +103,6 @@ export default function DailyContent({
       onSave({ ...newMood, vibe });
     } else {
       try {
-        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary`,
           {
@@ -115,7 +113,7 @@ export default function DailyContent({
             },
             body: JSON.stringify({
               content: diary,
-              contentDate: formattedDate,
+              contentDate: date,
             }),
           }
         );
@@ -125,7 +123,7 @@ export default function DailyContent({
 
           const newMood = {
             content: diary,
-            contentDate: formattedDate,
+            contentDate: date,
             vibe: data.vibe,
           };
 
@@ -142,7 +140,7 @@ export default function DailyContent({
 
     setLoading(false);
     onClose(true);
-    toast.success(`Diary content saved successfully in ${formattedDate}!`);
+    toast.success(`Diary content saved successfully in ${date}!`);
   };
 
   const handleDeleteClick = () => {
@@ -151,16 +149,15 @@ export default function DailyContent({
 
   const confirmDelete = async () => {
     if (document.cookie.includes("tempUser")) {
-      deleteLocalDiaryEntry(formattedDate);
-      onSave({ contentDate: formattedDate, content: "", vibe: "" });
+      deleteLocalDiaryEntry(date);
+      onSave({ contentDate: date, content: "", vibe: "" });
       onClose();
       return;
     }
 
     try {
-      const token = localStorage.getItem("access_token");
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${date}`,
         {
           method: "DELETE",
           headers: {
@@ -171,7 +168,7 @@ export default function DailyContent({
       );
 
       if (response.ok) {
-        onSave({ contentDate: formattedDate, content: "", vibe: "" });
+        onSave({ contentDate: date, content: "", vibe: "" });
         onClose();
       } else {
         throw new Error("Failed to delete diary content");

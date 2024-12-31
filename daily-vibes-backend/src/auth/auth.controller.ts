@@ -18,17 +18,9 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Request() req, @Response({ passthrough: true }) res) {
+  async login(@Request() req) {
     const { access_token } = await this.authService.login(req.user);
     console.log('Access Token:', access_token);
-
-    //TODO: Set secure to true in production, httpOnly to true in production
-    // res.cookie('access_token', access_token, {
-    //   httpOnly: false,
-    //   secure: true,
-    //   path: '/',
-    //   sameSite: 'none',
-    // });
 
     return {
       message: 'Login successful',
@@ -38,18 +30,10 @@ export class AuthController {
   }
 
   @Post('logout')
-  async logout(@Request() req, @Response({ passthrough: true }) res) {
+  async logout(@Request() req) {
     if (req.logout) {
       req.logout();
     }
-
-    // res.clearCookie('access_token', {
-    //   path: '/',
-    // });
-
-    // res.clearCookie('tempUser', {
-    //   path: '/',
-    // });
 
     return { message: 'Logged out successfully' };
   }
@@ -58,17 +42,8 @@ export class AuthController {
   async setTempUser(@Request() req, @Response() res) {
     const { access_token } = await this.authService.login({
       email: 'tempUser',
-      id: 999,
+      id: 9999999,
     });
-    // const tempUser = true;
-
-    // res.cookie('tempUser', tempUser, {
-    //   httpOnly: false,
-    //   secure: false,
-    //   path: '/',
-    //   sameSite: 'lax',
-    //   // maxAge: 1000 * 4,
-    // });
 
     return res.status(200).json({ message: 'Login successful', access_token });
   }

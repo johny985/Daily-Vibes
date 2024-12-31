@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 
 export default function Diary() {
+  const token = localStorage.getItem("access_token");
   const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(() => {
     const today = new Date();
@@ -46,7 +47,7 @@ export default function Diary() {
 
       try {
         //TODO: Apply appropriate cache
-        const token = localStorage.getItem("access_token");
+
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
           {
@@ -103,7 +104,6 @@ export default function Diary() {
       setEditable(false);
     } else {
       try {
-        const token = localStorage.getItem("access_token");
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary`,
           {
