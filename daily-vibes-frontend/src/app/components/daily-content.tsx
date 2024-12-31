@@ -25,7 +25,13 @@ export default function DailyContent({
   const [diary, setDiary] = useState("");
   const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
   const [hasInitialContent, setHasInitialContent] = useState(false);
-  const token = localStorage.getItem("access_token");
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(() => {
+      return localStorage.getItem("access_token") as string;
+    });
+  }, []);
 
   useEffect(() => {
     const fetchDiaryContent = async () => {

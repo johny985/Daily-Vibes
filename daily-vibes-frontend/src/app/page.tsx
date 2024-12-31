@@ -10,7 +10,6 @@ import {
 import { toast } from "react-toastify";
 
 export default function Diary() {
-  const token = localStorage.getItem("access_token");
   const [isLoading, setLoading] = useState(false);
   const [date, setDate] = useState(() => {
     const today = new Date();
@@ -25,6 +24,13 @@ export default function Diary() {
   });
   const [diary, setDiary] = useState("");
   const [editable, setEditable] = useState(false);
+  const [token, setToken] = useState("");
+
+  useEffect(() => {
+    setToken(() => {
+      return localStorage.getItem("access_token") as string;
+    });
+  }, []);
 
   useEffect(() => {
     const fetchDiaryContent = async () => {
