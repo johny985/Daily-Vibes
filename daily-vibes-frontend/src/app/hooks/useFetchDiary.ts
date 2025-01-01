@@ -1,5 +1,6 @@
 import { Diary } from "@/types";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function useFetchDiary() {
   const [dailyData, setDailyData] = useState<any>([]);
@@ -45,8 +46,11 @@ export default function useFetchDiary() {
       } else {
         console.error("Failed to fetch diary content");
       }
-    } catch (error) {
-      console.error("Error fetching diary content:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message);
+      else toast.error("An unknown error occurred");
+
+      return;
     } finally {
       setLoading(false);
     }

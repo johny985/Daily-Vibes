@@ -81,7 +81,7 @@ export default function DailyContent({
     };
 
     fetchDiaryContent();
-  }, [date]);
+  }, [date, token]);
 
   const handleDiaryUpdate = async () => {
     if (!diary) {
@@ -139,6 +139,7 @@ export default function DailyContent({
         }
       } catch (error) {
         toast.error("Failed to save diary content. Please try again.");
+        return;
       } finally {
         setLoading(false);
       }

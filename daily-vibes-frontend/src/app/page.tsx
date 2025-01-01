@@ -83,7 +83,7 @@ export default function Diary() {
     };
 
     fetchDiaryContent();
-  }, [date]);
+  }, [date, token]);
 
   const handleDiaryUpdate = async () => {
     const [year, month, day] = date.split("-");
@@ -134,6 +134,7 @@ export default function Diary() {
         }
       } catch (error) {
         toast.error("Failed to save diary content. Please try again.");
+        return;
       } finally {
         setLoading(false);
       }
