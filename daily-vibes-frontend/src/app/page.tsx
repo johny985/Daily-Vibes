@@ -102,10 +102,19 @@ export default function Diary() {
     setLoading(true);
 
     if (document.cookie.includes("tempUser")) {
-      await saveLocalDiaryEntry({
-        content: diary,
-        contentDate: formattedDate,
-      });
+      try {
+        await saveLocalDiaryEntry({
+          content: diary,
+          contentDate: formattedDate,
+        });
+      } catch (error) {
+        if (error instanceof Error) toast.error(error.message);
+        else toast.error("An unexpected error occurred. Please try again.");
+
+        return;
+      } finally {
+        setLoading(false);
+      }
 
       setEditable(false);
     } else {
@@ -133,14 +142,15 @@ export default function Diary() {
           throw new Error("Failed to save diary content");
         }
       } catch (error) {
-        toast.error("Failed to save diary content. Please try again.");
+        if (error instanceof Error) toast.error(error.message);
+        else toast.error("An unexpected error occurred. Please try again.");
+
         return;
       } finally {
         setLoading(false);
       }
     }
 
-    setLoading(false);
     toast.success(`Diary content saved successfully in ${formattedDate}!`);
   };
 

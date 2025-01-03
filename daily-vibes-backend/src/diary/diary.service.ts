@@ -78,10 +78,12 @@ export class DiaryService {
 
     const allowedEmotions = ['Happy', 'Sad', 'Exhausted', 'Angry'];
     const openai = this.openAIProvider.getInstance();
+    const maxTrial = 20;
 
+    let trial = 0;
     let vibe: string | undefined;
 
-    while (!allowedEmotions.includes(vibe)) {
+    while (trial < maxTrial) {
       const response = await openai.chat.completions.create({
         messages: [
           {
@@ -91,9 +93,8 @@ export class DiaryService {
           {
             role: 'system',
             content: `Select the most fitting emotion based on the content:
-	                  Happy, Sad, Exhausted, Angry
-                      **Make sure to only respond with the emotion.**
-            `,
+                    Happy, Sad, Exhausted, Angry
+                    **Make sure to only respond with the emotion.**`,
           },
         ],
         model: 'meta-llama/Meta-Llama-3.1-8B-Instruct',
@@ -101,9 +102,14 @@ export class DiaryService {
       });
 
       vibe = response.choices[0]?.message.content.trim();
+      trial++;
+
+      if (allowedEmotions.includes(vibe)) {
+        return vibe;
+      }
     }
 
-    return vibe;
+    throw new Error('Please try again with a different prompt');
   }
 
   async findAll(year, month, userId: number | undefined) {

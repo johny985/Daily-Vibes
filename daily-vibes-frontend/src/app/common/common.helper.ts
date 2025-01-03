@@ -1,3 +1,5 @@
+import { toast } from "react-toastify";
+
 export function fetchLocalDiaryOnDate(date: string) {
   const storedEntries = localStorage.getItem("diaryEntries");
   const existingEntries = storedEntries ? JSON.parse(storedEntries) : [];
@@ -24,7 +26,9 @@ export async function saveLocalDiaryEntry(entry: any) {
   );
 
   if (!response.ok) {
-    throw new Error("Failed to fetch vibe");
+    throw new Error(
+      "Failed to fetch vibe, please try again with differnt content."
+    );
   }
 
   const { vibe } = await response.json();

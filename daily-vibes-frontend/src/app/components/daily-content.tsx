@@ -102,9 +102,20 @@ export default function DailyContent({
         contentDate: date,
       };
 
-      const vibe = await saveLocalDiaryEntry({
-        ...newMood,
-      });
+      let vibe: string;
+
+      try {
+        vibe = await saveLocalDiaryEntry({
+          ...newMood,
+        });
+      } catch (error) {
+        if (error instanceof Error) toast.error(error.message);
+        else toast.error("An unexpected error occurred. Please try again.");
+
+        return;
+      } finally {
+        setLoading(false);
+      }
 
       onSave({ ...newMood, vibe });
     } else {
@@ -138,7 +149,9 @@ export default function DailyContent({
           throw new Error("Failed to save diary content");
         }
       } catch (error) {
-        toast.error("Failed to save diary content. Please try again.");
+        if (error instanceof Error) toast.error(error.message);
+        else toast.error("An unexpected error occurred. Please try again.");
+
         return;
       } finally {
         setLoading(false);
