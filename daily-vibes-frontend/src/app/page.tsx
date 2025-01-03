@@ -27,12 +27,13 @@ export default function Diary() {
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    setToken(() => {
-      return localStorage.getItem("access_token") as string;
-    });
+    const accessToken = localStorage.getItem("access_token");
+    setToken(accessToken || "");
   }, []);
 
   useEffect(() => {
+    if (!token) return;
+
     const fetchDiaryContent = async () => {
       const [year, month, day] = date.split("-");
       const formattedDate = `${month}/${day}/${year}`;
@@ -53,7 +54,6 @@ export default function Diary() {
 
       try {
         //TODO: Apply appropriate cache
-
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/diary?date=${formattedDate}`,
           {

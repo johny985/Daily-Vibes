@@ -28,12 +28,13 @@ export default function DailyContent({
   const [token, setToken] = useState("");
 
   useEffect(() => {
-    setToken(() => {
-      return localStorage.getItem("access_token") as string;
-    });
+    const accessToken = localStorage.getItem("access_token");
+    setToken(accessToken || "");
   }, []);
 
   useEffect(() => {
+    if (!token) return;
+
     const fetchDiaryContent = async () => {
       if (document.cookie.includes("tempUser")) {
         const diaryEntry = fetchLocalDiaryOnDate(date);

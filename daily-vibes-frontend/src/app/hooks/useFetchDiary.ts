@@ -6,18 +6,25 @@ export default function useFetchDiary() {
   const [dailyData, setDailyData] = useState<any>([]);
   const [isLoading, setLoading] = useState(true);
 
-  const fetchDiaryContent = async (year: number, month: number) => {
+  const fetchDiaryContent = async (
+    year: number | string,
+    month: number | string
+  ) => {
     setLoading(true);
+
+    const formattedYear = String(year).padStart(2, "0");
+    const formattedMonth = String(month).padStart(2, "0");
 
     if (document.cookie.includes("tempUser")) {
       if (!localStorage.diaryEntries) return;
 
       const diaries: Diary[] = JSON.parse(localStorage.diaryEntries);
-
       const filteredDiares = diaries.filter((diary: Diary) => {
         const diaryDate = new Date(diary.contentDate);
         return (
-          diaryDate.getFullYear() === year && diaryDate.getMonth() + 1 === month
+          // diaryDate.getFullYear() === year && diaryDate.getMonth() + 1 === month
+          String(diaryDate.getFullYear()).padStart(2, "0") === formattedYear &&
+          String(diaryDate.getMonth() + 1).padStart(2, "0") === formattedMonth
         );
       });
 
@@ -28,8 +35,9 @@ export default function useFetchDiary() {
 
     try {
       const token = localStorage.getItem("access_token");
+
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/diary?year=${year}&month=${month}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/diary?year=${formattedYear}&month=${formattedMonth}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -58,8 +66,8 @@ export default function useFetchDiary() {
 
   useEffect(() => {
     const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = String(currentDate.getFullYear()).padStart(2, "0");
+    const currentMonth = String(currentDate.getMonth() + 1).padStart(2, "0");
 
     fetchDiaryContent(currentYear, currentMonth);
   }, []);

@@ -41,7 +41,7 @@ export default function Home() {
 
   const handleDayClick = (value: Date) => {
     const year = value.getFullYear();
-    const month = String(value.getMonth() + 1).padStart(2, "0"); // Months are 0-indexed
+    const month = String(value.getMonth() + 1).padStart(2, "0");
     const day = String(value.getDate()).padStart(2, "0");
 
     const formattedDate = `${month}/${day}/${year}`;
