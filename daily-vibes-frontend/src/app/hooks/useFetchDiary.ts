@@ -12,23 +12,25 @@ export default function useFetchDiary() {
   ) => {
     setLoading(true);
 
-    const formattedYear = String(year).padStart(2, "0");
+    const formattedYear = String(year);
     const formattedMonth = String(month).padStart(2, "0");
 
     if (document.cookie.includes("tempUser")) {
       if (!localStorage.diaryEntries) return;
 
       const diaries: Diary[] = JSON.parse(localStorage.diaryEntries);
-      const filteredDiares = diaries.filter((diary: Diary) => {
+      const filteredDiaries = diaries.filter((diary: Diary) => {
         const diaryDate = new Date(diary.contentDate);
+        const year = diaryDate.getFullYear();
+        const month = diaryDate.getMonth() + 1;
+
         return (
-          // diaryDate.getFullYear() === year && diaryDate.getMonth() + 1 === month
-          String(diaryDate.getFullYear()).padStart(2, "0") === formattedYear &&
-          String(diaryDate.getMonth() + 1).padStart(2, "0") === formattedMonth
+          year.toString() === formattedYear &&
+          month.toString().padStart(2, "0") === formattedMonth
         );
       });
 
-      setDailyData(filteredDiares);
+      setDailyData(filteredDiaries);
       setLoading(false);
       return;
     }
